@@ -279,15 +279,20 @@ const MyPage = () => {
 };
 
 const PostCard = styled.li`
-  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  width: 1000px;
+  background-color: gray;
+  margin-bottom: 100px;
 `;
 
 const MypostList = styled.ul`
-  height: 100px;
-  width: 300px;
-  flex-wrap: wrap;
-  gap: 100px;
-  background-color: gray;
+  height: auto;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
 `;
 
 const ProfileContainer = styled.div`
@@ -304,6 +309,7 @@ const ProfileImageWrap = styled.div`
   background: none;
   width: 150px;
   height: 150px;
+
   border-radius: 50%;
   background-color: white;
   background: url(./ghostProfileImg.png) no-repeat center/cover;
