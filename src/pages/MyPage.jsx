@@ -9,6 +9,7 @@ const ContentsPage = () => {
 
   const OpenModalBtn = styled.button`
     height: 100px;
+    width: 100px;
   `;
 
   const fetchContents = async () => {
