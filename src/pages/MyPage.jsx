@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import supabase from '../utils/supabaseClient';
 import styled from 'styled-components';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const OpenModalBtn = styled.button`
   display: flex;
@@ -122,11 +123,12 @@ const MyPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [profileImg, setProfileImg] = useState(null); // 기존 프로필 이미지
   const [selectedFile, setSelectedFile] = useState();
+  const navigate = useNavigate();
   // const [data, setData] = useState([]);
 
   // 게시글 가져오기
   const fetchContents = async () => {
-    const { data, error } = await supabase.from('posts').select('id, content, image_url, created_at');
+    const { data, error } = await supabase.from('posts').select('id, content, image_url, created_at, title');
 
     if (error) {
       setError(error.message);
@@ -135,15 +137,15 @@ const MyPage = () => {
       setContents(data);
       console.log('Fetched contents:', data);
     }
-
+    // posts라는 테이블에 있는 created_at의 표시형식 바꾸는 법
     const formattedData = data.map((item) => ({
       ...item,
-      created_at: new Date(item.created_at).toISOString().slice(0, 16).replace('T', '　　')
+      created_at: new Date(item.created_at).toISOString().slice(0, 16).replace('T', '　')
     }));
     setContents(formattedData);
   };
 
-  // 파일 선택 핸들러
+  // 파일 선택 핸들
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -198,7 +200,7 @@ const MyPage = () => {
       error
     } = await supabase.auth.getUser();
     if (error || !user) {
-      alert('Failed to fetch user information.');
+      alert('로그인 정보가 만료되었습니다 다시 로그인 해주세요.');
       return;
     }
 
@@ -224,6 +226,21 @@ const MyPage = () => {
     }
   };
 
+  const handleDelete = async () => {
+    const testId = 1;
+    // 삭제를 테스트 하기 위해서 임시 값을 넣어둠
+    const { error } = await supabase.from('posts').delete().eq('id', testId);
+    // 현제 코드는 로그인값이 구현되지 않아서 userId값이 아니라 tsetID값을 사용중임
+    if (error) {
+      console.log(error);
+      alert('삭제 중 문제가 발생했습니다.');
+    } else {
+      setContents((prevData) => prevData.filter((posts) => posts.id !== testId));
+      alert('게시물이 삭제되었습니다.');
+      // 현제 코드는 로그인값이 구현되지 않아서 userId값이 아니라 tsetID값을 사용중임
+    }
+  };
+
   // 모달 열기
   const openModal = () => {
     setIsModalOpen(true);
@@ -240,6 +257,10 @@ const MyPage = () => {
     fetchContents();
   }, []);
 
+  const handleDitailpage = () => {
+    navigate('/detail');
+  };
+
   return (
     <div>
       <MyPofileTeble>
@@ -252,6 +273,30 @@ const MyPage = () => {
         </ul>
         <OpenModalBtn onClick={openModal}>프로필 수정</OpenModalBtn>
       </MyPofileTeble>
+      {/* //
+      //
+      // 마이페이지 내 게시물 리스트
+      //
+      // 
+      // */}
+      <MypostList>
+        {contents.map((item) => (
+          <PostCard key={item.id}>
+            <PostTitle>{item.title}</PostTitle>
+            <PostCreated>{item.created_at} </PostCreated>
+            <Popo>
+              <PostMap></PostMap>
+              <PostText>{item.content}</PostText>
+            </Popo>
+            {/* <img src={item.image_url} alt={item.content || 'Image'} /> */}
+            <PostBut>
+              <PostEditDelete onClick={handleDitailpage}>수정</PostEditDelete>
+              <PostEditDelete onClick={handleDelete}>삭제</PostEditDelete>
+            </PostBut>
+          </PostCard>
+        ))}
+        {error && <p>Error: {error}</p>}
+      </MypostList>
       {/* //
       //
       //
@@ -276,43 +321,39 @@ const MyPage = () => {
           </ModalContent>
         </OverlayModal>
       )}
-      {/* //
-      //
-      // 마이페이지 내 게시물 리스트
-      //
-      // 
-      // */}
-      <MypostList>
-        {contents.map((item) => (
-          <PostCard key={item.id}>
-            <PostCreated>{item.created_at} </PostCreated>
-            <Popo>
-              <PostMap></PostMap>
-              <PostText>{item.content}</PostText>
-            </Popo>
-            {/* <img src={item.image_url} alt={item.content || 'Image'} /> */}
-            <PostBut>
-              <button>수정</button>
-              <button>삭제</button>
-            </PostBut>
-          </PostCard>
-        ))}
-        {error && <p>Error: {error}</p>}
-      </MypostList>
     </div>
   );
 };
 
+const PostTitle = styled.h1`
+  height: 10px;
+  margin-bottom: 30px;
+  font-size: 30px;
+`;
+
+const PostEditDelete = styled.button`
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  height: 35px;
+  width: 55px;
+  border-radius: 10px;
+  /* background-color: #383737; */
+  background-color: black;
+  color: #a80101;
+`;
 const PostCreated = styled.div`
   display: flex;
   justify-content: end;
   align-items: end;
+  margin-bottom: 20px;
 `;
 const Popo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
 `;
+
 const PostMap = styled.div`
   height: 300px;
   width: 300px;
@@ -368,7 +409,6 @@ const ProfileImageWrap = styled.div`
   width: 150px;
   height: 150px;
   border-radius: 50%;
-
   background-color: white;
   background: url(./ghostProfileImg.png) no-repeat center/cover;
   text-indent: -9999em;
