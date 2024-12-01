@@ -306,10 +306,8 @@ const ProfileContainer = styled.div`
 `;
 
 const ProfileImageWrap = styled.div`
-  background: none;
   width: 150px;
   height: 150px;
-
   border-radius: 50%;
   background-color: white;
   background: url(./ghostProfileImg.png) no-repeat center/cover;
@@ -324,6 +322,9 @@ const MyPofileTeble = styled.div`
   width: 700px;
   margin-top: 50px;
   margin-left: 300px;
+  gap: 20px;
+  /* border: 10px solid red; */
+  margin-bottom: 100px;
 `;
 
 export default MyPage;
