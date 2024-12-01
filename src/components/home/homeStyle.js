@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const HomeWrap = styled.div`
   display: flex;
@@ -8,6 +8,11 @@ export const HomeWrap = styled.div`
   height: 100vh;
   width: 100vw;
   text-align: center;
+  img {
+    width: 30px;
+    position: fixed;
+    bottom: 30px;
+  }
 `;
 
 export const HomeH1 = styled.h1`
@@ -35,7 +40,7 @@ export const HomeForm = styled.form`
   }
   button {
     color: #a80101;
-    font-size: 35px;
+    font-size: 45px;
     font-weight: bold;
     border: none;
     background-color: transparent;

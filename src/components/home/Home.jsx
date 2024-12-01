@@ -1,5 +1,6 @@
-import { IoSearch } from 'react-icons/io5';
 import { HomeForm, HomeH1, HomeWrap } from '../home/homeStyle';
+import { MdManageSearch } from 'react-icons/md';
+import hand from '../../assets/hand.png';
 
 const Home = () => {
   return (
@@ -11,10 +12,11 @@ const Home = () => {
         <HomeForm>
           <input type="text" placeholder="SEARCH GHOST HOUSE" />
           <button>
-            <IoSearch />
+            <MdManageSearch />
           </button>
         </HomeForm>
       </div>
+      <img src={hand} alt="hand" />
     </HomeWrap>
   );
 };
