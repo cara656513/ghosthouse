@@ -268,8 +268,15 @@ const MyPage = () => {
       <MypostList>
         {contents.map((item) => (
           <PostCard key={item.id}>
-            <p>{item.content}</p>
-            <img src={item.image_url} alt={item.content || 'Image'} />
+            <Popo>
+              <PostMap></PostMap>
+              <PostText>{item.content}</PostText>
+            </Popo>
+            {/* <img src={item.image_url} alt={item.content || 'Image'} /> */}
+            <PostBut>
+              <button>수정</button>
+              <button>삭제</button>
+            </PostBut>
           </PostCard>
         ))}
         {error && <p>Error: {error}</p>}
@@ -277,6 +284,33 @@ const MyPage = () => {
     </div>
   );
 };
+const Popo = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const PostMap = styled.div`
+  height: 300px;
+  width: 300px;
+  background-color: yellow;
+`;
+
+const PostBut = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 500px;
+  padding: 10px;
+  margin-top: 10px;
+`;
+
+const PostText = styled.p`
+  background-color: green;
+  height: 300px;
+  width: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const PostCard = styled.li`
   display: flex;
@@ -286,6 +320,7 @@ const PostCard = styled.li`
   width: 1000px;
   background-color: gray;
   margin-bottom: 100px;
+  flex-direction: column;
 `;
 
 const MypostList = styled.ul`
@@ -309,6 +344,7 @@ const ProfileImageWrap = styled.div`
   width: 150px;
   height: 150px;
   border-radius: 50%;
+
   background-color: white;
   background: url(./ghostProfileImg.png) no-repeat center/cover;
   text-indent: -9999em;
@@ -320,7 +356,7 @@ const MyPofileTeble = styled.div`
   align-items: center;
   background-color: #444444;
   width: 700px;
-  margin-top: 50px;
+  margin-top: 150px;
   margin-left: 300px;
   gap: 20px;
   /* border: 10px solid red; */
