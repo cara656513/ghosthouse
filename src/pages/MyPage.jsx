@@ -3,16 +3,23 @@ import supabase from '../utils/supabaseClient';
 import styled from 'styled-components';
 import { Navigate, useNavigate } from 'react-router-dom';
 
+const Wrap = styled.div`
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  height: auto;
+`;
+
 const OpenModalBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 20px;
+  height: 30px;
   width: 70px;
   background-color: red;
   font-size: 10px;
   border-radius: 10px;
-  margin-left: 200px;
+  margin-left: 170px;
 `;
 
 const OverlayModal = styled.div`
@@ -128,7 +135,9 @@ const MyPage = () => {
 
   // 게시글 가져오기
   const fetchContents = async () => {
-    const { data, error } = await supabase.from('posts').select('id, content, image_url, created_at, title');
+    const { data, error } = await supabase
+      .from('posts')
+      .select('id, content, image_url, created_at, title, latitude, longitude ');
 
     if (error) {
       setError(error.message);
@@ -262,8 +271,8 @@ const MyPage = () => {
   };
 
   return (
-    <div>
-      <MyPofileTeble>
+    <Wrap>
+      <MyPofileTable>
         <ProfileImageWrap>
           <MyPageListProfileImg src={profileImg} alt="Profile" />
         </ProfileImageWrap>
@@ -272,7 +281,9 @@ const MyPage = () => {
           <p>게시글 수</p>
         </ul>
         <OpenModalBtn onClick={openModal}>프로필 수정</OpenModalBtn>
-      </MyPofileTeble>
+      </MyPofileTable>
+
+      <hr style={{ borderColor: '#bebebe3', marginBottom: '40px' }} />
       {/* //
       //
       // 마이페이지 내 게시물 리스트
@@ -285,9 +296,10 @@ const MyPage = () => {
             <PostTitle>{item.title}</PostTitle>
             <PostCreated>{item.created_at} </PostCreated>
             <Popo>
-              <PostMap></PostMap>
-              <PostText>{item.content}</PostText>
+              <PostMap>{}</PostMap>
+              <PostImage></PostImage>
             </Popo>
+            <PostText>{item.content}</PostText>
             {/* <img src={item.image_url} alt={item.content || 'Image'} /> */}
             <PostBut>
               <PostEditDelete onClick={handleDitailpage}>수정</PostEditDelete>
@@ -321,9 +333,16 @@ const MyPage = () => {
           </ModalContent>
         </OverlayModal>
       )}
-    </div>
+    </Wrap>
   );
 };
+
+const PostImage = styled.img`
+  width: 350px;
+  height: 300px;
+  background-color: red;
+  margin-left: 5px;
+`;
 
 const PostTitle = styled.h1`
   height: 10px;
@@ -356,7 +375,8 @@ const Popo = styled.div`
 
 const PostMap = styled.div`
   height: 300px;
-  width: 300px;
+  width: 350px;
+  margin-right: 5px;
   background-color: yellow;
 `;
 
@@ -369,9 +389,10 @@ const PostBut = styled.div`
 `;
 
 const PostText = styled.p`
-  background-color: green;
+  background-color: rgba(128, 128, 128, 0.2); /* 회색 + 50% 투명도 */
   height: 300px;
-  width: 400px;
+  width: 710px;
+  margin-top: 10px;
   display: flex;
   justify-content: center;
   align-items: start;
@@ -383,7 +404,7 @@ const PostCard = styled.li`
   align-items: center;
   height: 500px;
   width: 1000px;
-  background-color: gray;
+  background-color: rgba(128, 128, 128, 0.5); /* 회색 + 50% 투명도 */
   margin-bottom: 100px;
   flex-direction: column;
 `;
@@ -414,17 +435,20 @@ const ProfileImageWrap = styled.div`
   text-indent: -9999em;
 `;
 
-const MyPofileTeble = styled.div`
+const MyPofileTable = styled.div`
   display: flex;
   justify-content: start;
   align-items: center;
-  background-color: #444444;
-  width: 700px;
+  margin-left: 230px;
+  /* background-color: #444444; */
+  position: static;
+  /* border-bottom: 2px solid #eee; */
+  width: 100%;
   margin-top: 150px;
-  margin-left: 300px;
+  /* margin-left: 300px; */
   gap: 20px;
   /* border: 10px solid red; */
-  margin-bottom: 100px;
+  margin-bottom: 19px;
 `;
 
 export default MyPage;
