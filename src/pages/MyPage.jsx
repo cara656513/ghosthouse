@@ -222,7 +222,7 @@ const MyPage = () => {
       // 수정된 부분: 업로드 성공 시 프로필 이미지를 바로 갱신
       setProfileImg(imageUrl); // UI 상에서 새 프로필 이미지 표시
     } else {
-      alert('프로필 URL 저장 실패!');
+      alert('프로필 URL 저장 실패!!');
     }
   };
 
