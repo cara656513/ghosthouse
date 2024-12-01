@@ -1,5 +1,5 @@
-const ProtectedRoute = () => {
-  return <div>ProtectedRoute</div>;
+const ProtectedRoute = ({ element: Element, ...rest }) => {
+  return <Element {...rest} />;
 };
 
 export default ProtectedRoute;
