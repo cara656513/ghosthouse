@@ -122,10 +122,11 @@ const MyPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [profileImg, setProfileImg] = useState(null); // 기존 프로필 이미지
   const [selectedFile, setSelectedFile] = useState();
+  // const [data, setData] = useState([]);
 
   // 게시글 가져오기
   const fetchContents = async () => {
-    const { data, error } = await supabase.from('posts').select('id, content, image_url');
+    const { data, error } = await supabase.from('posts').select('id, content, image_url, created_at');
 
     if (error) {
       setError(error.message);
@@ -134,6 +135,12 @@ const MyPage = () => {
       setContents(data);
       console.log('Fetched contents:', data);
     }
+
+    const formattedData = data.map((item) => ({
+      ...item,
+      created_at: new Date(item.created_at).toISOString().slice(0, 16).replace('T', '　　')
+    }));
+    setContents(formattedData);
   };
 
   // 파일 선택 핸들러
@@ -245,16 +252,26 @@ const MyPage = () => {
         </ul>
         <OpenModalBtn onClick={openModal}>프로필 수정</OpenModalBtn>
       </MyPofileTeble>
+      {/* //
+      //
+      //
+      //
+      //
+      //
+      //
+      // */}
       {/* // 프로필 수정하기 모달 */}
       {isModalOpen && (
         <OverlayModal onClick={closeModal}>
           <ModalContent onClick={(e) => e.stopPropagation()}>
-            <h1>프로필 수정</h1>
+            <h1>우석님 프로필 페이지</h1>
             <ProfileContainer>
               <ProfileImage src={profileImg} alt="Profile" /> {/* 수정: 현재 프로필 이미지 표시 */}
               <ProfileInput type="file" accept="image/*" onChange={handleFileChange} />
               <button onClick={uploadAndSaveProfile}>프로필 수정 업로드</button>
             </ProfileContainer>
+            <p>닉네임 변경하기</p>
+            <p>id</p>
             <CloseModalBtn onClick={closeModal}>Close Modal</CloseModalBtn>
           </ModalContent>
         </OverlayModal>
@@ -268,6 +285,7 @@ const MyPage = () => {
       <MypostList>
         {contents.map((item) => (
           <PostCard key={item.id}>
+            <PostCreated>{item.created_at} </PostCreated>
             <Popo>
               <PostMap></PostMap>
               <PostText>{item.content}</PostText>
@@ -284,6 +302,12 @@ const MyPage = () => {
     </div>
   );
 };
+
+const PostCreated = styled.div`
+  display: flex;
+  justify-content: end;
+  align-items: end;
+`;
 const Popo = styled.div`
   display: flex;
   justify-content: center;
@@ -309,7 +333,7 @@ const PostText = styled.p`
   width: 400px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start;
 `;
 
 const PostCard = styled.li`
