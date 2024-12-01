@@ -4,7 +4,7 @@ import LoggedoutHeader from './LoggedoutHeader';
 import { NavHeader, NavLink } from './headerStyle';
 
 const Header = () => {
-  const [isLoggedin, setIsLoggedin] = useState(true);
+  const [isLoggedin, setIsLoggedin] = useState(false);
 
   return (
     <NavHeader>
