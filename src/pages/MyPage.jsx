@@ -19,7 +19,7 @@ const OpenModalBtn = styled.button`
   background-color: red;
   font-size: 10px;
   border-radius: 10px;
-  margin-left: 170px;
+  margin-left: 30px;
 `;
 
 const OverlayModal = styled.div`
@@ -135,17 +135,45 @@ const MyPage = () => {
 
   // 게시글 가져오기
   const fetchContents = async () => {
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    if (userError) {
+      console.error('Error fetching user:', userError.message);
+      return;
+    }
+
+    const userId = userData?.user?.id; // 현재 로그인된 사용자의 ID
+    if (!userId) {
+      console.error('No logged-in user found.');
+      return;
+    }
+
+    // posts 테이블에서 user_id가 현재 사용자인 게시글만 가져오기
     const { data, error } = await supabase
       .from('posts')
-      .select('id, content, image_url, created_at, title, latitude, longitude ');
+      .select(
+        `
+        id,
+        title,
+        content,
+        image_url,
+        created_at,
+        latitude,
+        longitude,
+        users (
+          nickname,
+          profile
+        )
+      `
+      )
+      .eq('user_id', userId);
 
     if (error) {
-      setError(error.message);
-      console.error('Error fetching contents:', error);
-    } else {
-      setContents(data);
-      console.log('Fetched contents:', data);
+      console.error('Error fetching contents:', error.message);
+      return;
     }
+
+    setContents(data); // 가져온 데이터를 상태로 저장
+    console.log('Fetched contents:', data);
     // posts라는 테이블에 있는 created_at의 표시형식 바꾸는 법
     const formattedData = data.map((item) => ({
       ...item,
@@ -236,7 +264,6 @@ const MyPage = () => {
   };
 
   const handleDelete = async () => {
-    const testId = 1;
     // 삭제를 테스트 하기 위해서 임시 값을 넣어둠
     const { error } = await supabase.from('posts').delete().eq('id', testId);
     // 현제 코드는 로그인값이 구현되지 않아서 userId값이 아니라 tsetID값을 사용중임
@@ -327,8 +354,11 @@ const MyPage = () => {
               <ProfileInput type="file" accept="image/*" onChange={handleFileChange} />
               <button onClick={uploadAndSaveProfile}>프로필 수정 업로드</button>
             </ProfileContainer>
-            <p>닉네임 변경하기</p>
-            <p>id</p>
+            <ModalProfile>
+              <p>닉네임 변경하기</p>
+              {/* <p>{nickname}</p> */}
+              <p>id</p>
+            </ModalProfile>
             <CloseModalBtn onClick={closeModal}>Close Modal</CloseModalBtn>
           </ModalContent>
         </OverlayModal>
@@ -336,6 +366,13 @@ const MyPage = () => {
     </Wrap>
   );
 };
+
+const ModalProfile = styled.div`
+  background-color: green;
+  position: absolute;
+  top: 200px;
+  left: 750px;
+`;
 
 const PostImage = styled.img`
   width: 350px;

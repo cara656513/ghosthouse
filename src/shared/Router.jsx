@@ -14,18 +14,18 @@ const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route element={<Layout />}>
+        <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route element={<ProtectedRoute />}> */}
-        <Route path="/mypage" element={<MyPage />} />
-        {/* <Route path="/newpost" element={<NewPostPage />} />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/newpost" element={<NewPostPage />} />
             <Route path="/detail" element={<DetailPage />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/updatepost" element={<UpdatePostPage />} /> */}
-        {/* </Route>
-        </Route> */}
+            <Route path="/updatepost" element={<UpdatePostPage />} />
+          </Route>
+        </Route>
       </Routes>
     </BrowserRouter>
   );
