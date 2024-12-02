@@ -12,6 +12,7 @@ export const HomeWrap = styled.div`
     width: 30px;
     position: fixed;
     bottom: 30px;
+    cursor: pointer;
   }
 `;
 

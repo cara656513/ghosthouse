@@ -2,7 +2,7 @@ import { HomeForm, HomeH1, HomeWrap } from '../home/homeStyle';
 import { MdManageSearch } from 'react-icons/md';
 import hand from '../../assets/hand.png';
 
-const Home = () => {
+const Home = ({ onScroll }) => {
   return (
     <HomeWrap>
       <div>
@@ -16,7 +16,7 @@ const Home = () => {
           </button>
         </HomeForm>
       </div>
-      <img src={hand} alt="hand" />
+      <img onClick={onScroll} src={hand} alt="hand" />
     </HomeWrap>
   );
 };
