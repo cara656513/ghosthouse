@@ -206,7 +206,7 @@ const MyPage = () => {
           <MyPageListProfileImg src={profileImg} alt="Profile" />
         </ProfileImageWrap>
         <ul>
-          <MyNickname>{nickname}님 안녕하세요.</MyNickname>
+          <p>{nickname}님 안녕하세요.</p>
           <p>{contents.postCount}개 입니다.</p>
         </ul>
         <OpenModalBtn onClick={openModal}>프로필 수정</OpenModalBtn>
@@ -252,22 +252,22 @@ const MyPage = () => {
           <ModalContent onClick={(e) => e.stopPropagation()}>
             <ProfileContainer>
               <ProfileImage src={profileImg} alt="Profile" /> {/* 수정: 현재 프로필 이미지 표시 */}
-              <ProfileInput type="file" accept="image/*" onChange={handleFileChange} placeholder="👻" />
+              <ProfileInput type="file" accept="image/*" onChange={handleFileChange} />
               <button onClick={uploadAndSaveProfile}>프로필 수정 업로드</button>
             </ProfileContainer>
             <ModalProfile>
               {/* <h1>{userData?.nickname}님 프로필 페이지</h1> */}
               {/* <p>닉네임 변경하기</p> */}
-              <NicknameText>{nickname}님 안녕하세요</NicknameText>
-              <NicknameEdit
+              <p>{nickname}님 안녕하세요</p>
+              <input
                 type="text"
                 placeholder="새 닉네임"
                 value={newNickname}
                 onChange={(e) => setNewNickname(e.target.value)}
               />
-              <NicknameEditBtn onClick={updateNickname}>닉네임 변경</NicknameEditBtn>
+              <button onClick={updateNickname}>닉네임 변경</button>
             </ModalProfile>
-            <CloseModalBtn onClick={closeModal}>X</CloseModalBtn>
+            <CloseModalBtn onClick={closeModal}>Close Modal</CloseModalBtn>
           </ModalContent>
         </OverlayModal>
       )}
