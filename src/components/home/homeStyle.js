@@ -23,6 +23,13 @@ export const HomeH1 = styled.h1`
   font-family: 'chiller', sans-serif;
 `;
 
+export const HomeSpan = styled.span`
+  color: #a80101;
+  font-family: 'chiller', sans-serif;
+  font-size: 45px;
+  padding: 50px;
+`;
+
 export const HomeForm = styled.form`
   margin-top: 20px;
   display: flex;

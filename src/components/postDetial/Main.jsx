@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import supabase from '../../utils/supabaseClient';
 
 const Main = () => {
   const [searchPost, setSearchPost] = useState(''); // 포스트 목록들  usestate 관리 (검색)

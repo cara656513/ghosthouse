@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
+import { HomeSpan } from './homeStyle';
 
 const { kakao } = window;
 
@@ -16,6 +17,7 @@ const HomeMap = () => {
 
   return (
     <MapContainer>
+      <HomeSpan>WHERE ARE YOU...</HomeSpan>
       <div id="map" style={{ width: '70%', height: '500px' }}></div>
     </MapContainer>
   );
