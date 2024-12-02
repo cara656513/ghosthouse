@@ -5,34 +5,43 @@ import supabase from '../../utils/supabaseClient';
 
 const SignInContainer = styled.div`
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.8) url('/your-background-image.jpg') no-repeat center center;
+  background: url('/your-background-image.jpg') no-repeat center center;
   background-size: cover;
-  color: white;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  max-width: 300px;
 `;
 
 const Input = styled.input`
+  width: 100%;
   margin: 10px 0;
   padding: 10px;
   font-size: 1rem;
-  width: 80%;
-  border: 1px solid #ccc;
+  border: none;
   border-radius: 5px;
-  outline: none;
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background 0.3s;
+
+  &::placeholder {
+    color: red;
+  }
+
+  &:focus {
+    background: rgba(255, 255, 255, 0.2);
+    outline: none;
+  }
 `;
 
 const Message = styled.p`
@@ -44,17 +53,18 @@ const Message = styled.p`
 
 const Button = styled.button`
   margin-top: 20px;
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 1rem;
-  background-color: #4caf50;
-  color: white;
+  background-color: black;
+  color: red;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, color 0.3s;
 
   &:hover {
-    background-color: #45a049;
+    background-color: red;
+    color: black;
   }
 `;
 
@@ -86,7 +96,6 @@ function SignIn() {
 
   return (
     <SignInContainer>
-      <h1>로그인</h1>
       <Form onSubmit={handleSignIn}>
         <Input type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} required />
         <Input
