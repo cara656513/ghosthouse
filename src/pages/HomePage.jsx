@@ -3,10 +3,12 @@ import Home from '../components/Home/Home';
 import HomeMap from '../components/home/HomeMap';
 
 const HomePage = () => {
+
   const bottomRef = useRef();
   const onMoveToForm = () => {
     bottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+
 
   return (
     <div>
@@ -15,6 +17,7 @@ const HomePage = () => {
       <div ref={bottomRef}></div>
     </div>
   );
+
 };
 
 export default HomePage;

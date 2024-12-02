@@ -9,6 +9,7 @@ import ProfilePage from '../pages/ProfilePage';
 import UpdatePostPage from '../pages/UpdatePostPage';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Layout from '../components/Layout';
+import Main from '../components/postDetial/Main';
 
 const Router = () => {
   return (
@@ -16,16 +17,22 @@ const Router = () => {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
+
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
+
           <Route element={<ProtectedRoute />}>
             <Route path="/mypage" element={<MyPage />} />
+
             <Route path="/newpost" element={<NewPostPage />} />
             <Route path="/detail" element={<DetailPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/updatepost" element={<UpdatePostPage />} />
+
           </Route>
+
         </Route>
+        {/* </Route> */}
       </Routes>
     </BrowserRouter>
   );
