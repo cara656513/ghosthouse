@@ -125,7 +125,7 @@ const ProfileInput = styled.input`
 `;
 
 const MyPage = () => {
-  const [contents, setContents] = useState([]); // 게시글 상태
+  const [contents, setContents] = useState({ posts: [], postCount: 0 }); // 게시글 상태
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const [profileImg, setProfileImg] = useState(null); // 프로필 이미지 상태
   const [selectedFile, setSelectedFile] = useState(null); // 업로드 파일 상태
@@ -150,7 +150,7 @@ const MyPage = () => {
   const fetchContents = async () => {
     if (!userData) return;
     try {
-      const { data, error } = await supabase
+      const { data, count, error } = await supabase
         .from('posts')
         .select(
           `
@@ -162,7 +162,8 @@ const MyPage = () => {
             nickname,
             profile
           )
-        `
+        `,
+          { count: 'exact' }
         )
         .eq('user_id', userData.id);
 
@@ -172,7 +173,7 @@ const MyPage = () => {
         ...item,
         created_at: new Date(item.created_at).toISOString().slice(0, 16).replace('T', ' ')
       }));
-      setContents(formattedData);
+      setContents({ posts: formattedData, postCount: count });
     } catch (err) {
       console.error('게시글을 가져오는데 실패했습니다.', err.message);
     }
@@ -288,7 +289,7 @@ const MyPage = () => {
         </ProfileImageWrap>
         <ul>
           <p>{nickname}님 안녕하세요.</p>
-          <p>게시글 수</p>
+          <p>{contents.postCount}개 입니다.</p>
         </ul>
         <OpenModalBtn onClick={openModal}>프로필 수정</OpenModalBtn>
       </MyPofileTable>
@@ -301,7 +302,7 @@ const MyPage = () => {
       // 
       // */}
       <MypostList>
-        {contents.map((item) => (
+        {contents.posts.map((item) => (
           <PostCard key={item.id}>
             <PostTitle>{item.title}</PostTitle>
             <PostCreated>{item.created_at} </PostCreated>
