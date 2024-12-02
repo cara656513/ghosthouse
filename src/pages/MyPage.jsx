@@ -12,7 +12,7 @@ import {
   MyPageListProfileImg,
   MyNickname,
   OpenModalBtn
-} from '../components/mypage/myfrofilestyle';
+} from '../components/mypage/myfropilestyle';
 
 import {
   MypostList,
