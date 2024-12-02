@@ -1,12 +1,20 @@
+import { useRef } from 'react';
 import Home from '../components/Home/Home';
 import HomeMap from '../components/home/HomeMap';
 
 const HomePage = () => {
 
+  const bottomRef = useRef();
+  const onMoveToForm = () => {
+    bottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+
   return (
     <div>
-      <Home />
+      <Home onScroll={onMoveToForm} />
       <HomeMap />
+      <div ref={bottomRef}></div>
     </div>
   );
 

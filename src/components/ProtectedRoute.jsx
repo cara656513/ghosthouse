@@ -1,5 +1,9 @@
-const ProtectedRoute = ({ element: Element, ...rest }) => {
-  return <Element {...rest} />;
+
+import { Outlet } from 'react-router-dom';
+
+const ProtectedRoute = () => {
+  return <Outlet />;
+
 };
 
 export default ProtectedRoute;

@@ -49,15 +49,17 @@ export const ModalContainer = styled.div`
 `;
 
 export const ModalOverlay = styled.div`
+  inset: 0; //position을 줬을 때 상하좌우 모두 0으로
   position: fixed;
   width: 100vw;
   height: 100vh;
   display: flex;
   z-index: 999;
-  flex-direction: column-reverse;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   background-color: rgba(0, 0, 0, 0.4);
 `;
+
 export const ModalContent = styled.div`
   position: relative;
   padding: 20px;
@@ -66,6 +68,6 @@ export const ModalContent = styled.div`
   align-items: center;
 
   img {
-    /* max-width: 800px; 이미지 크기 제한 */
+    max-width: 1000px;
   }
 `;

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { ModalContent, ModalOverlay } from './headerStyle';
+import ghost from '../../assets/ghost.jpg';
 
 const ModalImg = ({ onClose }) => {
   useEffect(() => {
@@ -13,7 +14,7 @@ const ModalImg = ({ onClose }) => {
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
-        <img src="/ghost.jpg" alt="" />
+        <img src={ghost} alt="" />
       </ModalContent>
     </ModalOverlay>
   );
