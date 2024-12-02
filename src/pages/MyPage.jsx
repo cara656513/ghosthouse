@@ -252,8 +252,9 @@ const MyPage = () => {
       fetchContents();
     }
   }, [userData]);
-  const handleDitailpage = () => {
-    navigate('/detail');
+  // 게시글 수정 페이지 이동
+  const handleDitailpage = (postId) => {
+    navigate(`/edit/${postId}`);
   };
 
   return (
@@ -286,7 +287,7 @@ const MyPage = () => {
             <PostImg>{item.post_img}</PostImg>
             <PostText>{item.content}</PostText>
             <PostBut>
-              <PostEditDelete onClick={handleDitailpage}>수정</PostEditDelete>
+              <PostEditDelete onClick={() => handleDitailpage(item.id)}>수정</PostEditDelete>
               <PostEditDelete onClick={() => handleDelete(item.id)}>삭제</PostEditDelete>
             </PostBut>
           </PostCard>
