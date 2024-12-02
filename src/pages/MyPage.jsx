@@ -5,17 +5,6 @@ import { data, Navigate, useNavigate } from 'react-router-dom';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import Modal from '../components/mypage/Modal';
-import {
-  OverlayModal,
-  ModalContent,
-  ProfileContainer,
-  ProfileImage,
-  ProfileInput,
-  ModalProfile,
-  NicknameText,
-  NicknameEditBtn,
-  CloseModalBtn
-} from '../components/mypage/modalstyle';
 
 import {
   MyPofileTable,
@@ -37,6 +26,7 @@ import {
   PostBut,
   PostEditDelete
 } from '../components/mypage/postliststyle';
+import PostList from '../components/mypage/PostList';
 
 const Wrap = styled.div`
   width: 100%;
@@ -274,32 +264,13 @@ const MyPage = () => {
         <OpenModalBtn onClick={() => setIsModalOpen(true)}>프로필 수정</OpenModalBtn>
       </MyPofileTable>
 
-      <MypostList>
-        {contents.posts.map((item) => (
-          <PostCard key={item.id}>
-            <PostTitle>{item.title}</PostTitle>
-            <PostCreated>{item.created_at}</PostCreated>
-            <Postitem>
-              <PostImg src={item.post_img} />
-              <Map // 지도를 표시할 Container
-                id="map"
-                center={{ lng: longitude, lat: latitude }}
-                style={{
-                  width: '300px',
-                  height: '300px'
-                }}
-                level={3}
-              />
-            </Postitem>
-            {/* <PostImg src={item.post_img} /> */}
-            <PostText>{item.content}</PostText>
-            <PostBut>
-              <PostEditDelete onClick={() => handleDitailpage(item.id)}>수정</PostEditDelete>
-              <PostEditDelete onClick={() => handleDelete(item.id)}>삭제</PostEditDelete>
-            </PostBut>
-          </PostCard>
-        ))}
-      </MypostList>
+      <PostList
+        posts={contents.posts}
+        handleDitailpage={handleDitailpage}
+        handleDelete={handleDelete}
+        longitude={longitude}
+        latitude={latitude}
+      />
 
       {isModalOpen && (
         <Modal
@@ -316,17 +287,6 @@ const MyPage = () => {
     </Wrap>
   );
 };
-
-const Postitem = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const PostImg = styled.img`
-  height: 300px;
-  width: 300px;
-`;
 
 const NicknameEdit = styled.input`
   height: 40px;
