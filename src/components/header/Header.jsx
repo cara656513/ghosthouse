@@ -7,18 +7,22 @@ import supabase from '../../utils/supabaseClient';
 const Header = () => {
   //유저 로그인 상태
   const [isLoggedin, setIsLoggedin] = useState(null);
+  console.log('isLoggedin', isLoggedin);
 
   // 유저정보 가져오기
   useEffect(() => {
-    try {
-      const fetchUser = async () => {
-        const { data } = await supabase.auth.getUser();
+    const fetchUser = async () => {
+      try {
+        const { data, error } = await supabase.auth.getUser();
+        if (error) throw error;
+        console.log('유저 정보:', data.user); // 유저 정보 확인
         setIsLoggedin(data.user);
-      };
-      fetchUser();
-    } catch (error) {
-      console.error(error.message);
-    }
+      } catch (error) {
+        console.log(error);
+        console.error('유저 정보를 가져오는 중 오류 발생:', error.message);
+      }
+    };
+    fetchUser();
   }, []);
 
   return (
