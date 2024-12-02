@@ -22,7 +22,7 @@ const Home = ({ onScroll }) => {
             type="text"
             placeholder="SEARCH GHOST HOUSE"
             value={searchValue}
-            onChange={() => {
+            onChange={(e) => {
               setSearchValue(e.target.value);
             }}
           />

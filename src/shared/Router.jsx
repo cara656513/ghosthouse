@@ -25,7 +25,7 @@ const Router = () => {
             <Route path="/detail" element={<DetailPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/updatepost" element={<UpdatePostPage />} />
-            <Route path="/search?q" element={<SearchPage />} />
+            <Route path="/search" element={<SearchPage />} />
           </Route>
         </Route>
       </Routes>
