@@ -7,9 +7,10 @@ export const WholeContainer = styled.div`
 `;
 
 export const Container = styled.div`
+  margin-top: 100px;
   padding: 100px;
   height: 100%;
-  background-color: #bdbdbd44;
+  background-color: #ffffff36;
 `;
 
 export const Form = styled.form`

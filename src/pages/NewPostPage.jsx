@@ -1,23 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
 import supabase from '../utils/supabaseClient';
 import { useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
-import { Container, Form, Input, ModalContent, ModalOverlay, WholeContainer } from '../styles/NewPostStyles';
+import {
+  Container,
+  Form,
+  Input,
+  ModalContent,
+  ModalOverlay,
+  WholeContainer
+} from '../components/newpost/NewPostStyles';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
-
-const uploadFile = async (input) => {
-  const { data, error } = await supabase.storage.from('Image').upload(input.img.name + uuidv4(), input.img);
-  if (error) {
-    console.log(error);
-    throw error;
-  }
-  const { data: imgdata } = supabase.storage.from('Image').getPublicUrl(data.path);
-  return imgdata.publicUrl;
-};
+import uploadFile from '../components/newpost/UploadFile';
 
 const NewPost = () => {
   const [userid, setUserid] = useState();
-  const [input, setInput] = useState({ img: null, text: '' });
+  const [input, setInput] = useState({ img: null, title: '' });
   const [previewImg, setPreviewImg] = useState('');
   const navigate = useNavigate();
 
@@ -30,7 +27,6 @@ const NewPost = () => {
 
   const handleTxtInputChange = (e) => {
     const { id, value } = e.target;
-
     setInput((prev) => ({ ...prev, [id]: value }));
   };
 
@@ -39,17 +35,12 @@ const NewPost = () => {
 
     try {
       const updatingObj = {};
-
-      if (input.img) {
-        const url = await uploadFile(input);
-        updatingObj.picture = url;
-      } else {
-        updatingObj.picture = null;
-      }
+      const url = await uploadFile(input);
+      updatingObj.picture = url;
       updatingObj.content = input.text;
 
       const { data, error } = await supabase.from('posts').insert({
-        user_id: userid,
+        user_id: '56f67586-3439-4b17-8ace-2e1a1776a029',
         ...updatingObj
       });
 
@@ -83,8 +74,8 @@ const NewPost = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const modalBackground = useRef();
 
+  //지도 좌표
   const center = {
-    // 지도의 중심좌표
     lat: 33.450701,
     lng: 126.570667
   };
@@ -112,7 +103,10 @@ const NewPost = () => {
                 {previewImg ? (
                   <img
                     style={{
-                      width: '100%'
+                      width: '100%',
+                      maxWidth: '400px',
+                      maxHeight: '400px',
+                      objectFit: 'cover'
                     }}
                     src={previewImg}
                   />
@@ -127,9 +121,9 @@ const NewPost = () => {
                   style={{
                     display: 'none'
                   }}
+                  required
                 />
               </label>
-
               <div
                 style={{
                   display: 'grid'
@@ -144,8 +138,14 @@ const NewPost = () => {
                 >
                   현위치 기록하기
                 </button>
-                <input placeholder="제목을 입력하세요" required></input>
-                <Input type="text" id="text" onChange={handleTxtInputChange} placeholder="내용을 입력하세요" required />
+                <input
+                  type="text"
+                  id="title"
+                  onChange={handleTxtInputChange}
+                  placeholder="제목을 입력하세요"
+                  required
+                ></input>
+                <Input type="text" id="text" onChange={handleTxtInputChange} placeholder="내용을 입력하세요" />
               </div>
             </div>
             <div>
@@ -157,23 +157,23 @@ const NewPost = () => {
       </WholeContainer>
 
       {modalOpen && (
-        <ModalOverlay>
-          <ModalContent
-            ref={modalBackground}
-            onClick={(e) => {
-              if (e.target === modalBackground.current) {
-                setModalOpen(false);
-              }
-            }}
-          >
+        <ModalOverlay
+          ref={modalBackground}
+          onClick={(e) => {
+            if (e.target === modalBackground.current) {
+              setModalOpen(false);
+            }
+          }}
+        >
+          <ModalContent>
             <div>
               <>
                 <Map
                   id="map"
                   center={center}
                   style={{
-                    width: '700px',
-                    height: '350px'
+                    width: '800px',
+                    height: '500px'
                   }}
                   level={3} // 지도의 확대 레벨
                   onClick={(_, mouseEvent) => {
@@ -190,7 +190,7 @@ const NewPost = () => {
                   {position && `클릭한 위치의 위도는 ${position.lat} 이고, 경도는 ${position.lng} 입니다`}
                 </div>
               </>
-              <button onClick={() => setModalOpen(false)}>모달 닫기</button>
+              <button onClick={() => setModalOpen(false)}>❌</button>
             </div>
           </ModalContent>
         </ModalOverlay>
