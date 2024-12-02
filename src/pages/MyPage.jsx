@@ -99,8 +99,12 @@ const MyPage = () => {
 
       const formattedData = data.map((item) => ({
         ...item,
+        // post_img를 그대로 사용
+        post_img: item.post_img || null,
         created_at: new Date(item.created_at).toISOString().slice(0, 16).replace('T', ' ')
       }));
+
+      console.log('Formatted Data:', formattedData);
 
       setContents({ posts: formattedData, postCount: count });
     } catch (err) {
@@ -275,16 +279,19 @@ const MyPage = () => {
           <PostCard key={item.id}>
             <PostTitle>{item.title}</PostTitle>
             <PostCreated>{item.created_at}</PostCreated>
-            <Map // 지도를 표시할 Container
-              id="map"
-              center={{ lng: longitude, lat: latitude }}
-              style={{
-                width: '40%',
-                height: '550px'
-              }}
-              level={3}
-            />
-            <PostImg>{item.post_img}</PostImg>
+            <Postitem>
+              <PostImg src={item.post_img} />
+              <Map // 지도를 표시할 Container
+                id="map"
+                center={{ lng: longitude, lat: latitude }}
+                style={{
+                  width: '300px',
+                  height: '300px'
+                }}
+                level={3}
+              />
+            </Postitem>
+            {/* <PostImg src={item.post_img} /> */}
             <PostText>{item.content}</PostText>
             <PostBut>
               <PostEditDelete onClick={() => handleDitailpage(item.id)}>수정</PostEditDelete>
@@ -320,8 +327,15 @@ const MyPage = () => {
   );
 };
 
-const PostImg = styled.image`
-  height: 500px;
+const Postitem = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const PostImg = styled.img`
+  height: 300px;
+  width: 300px;
 `;
 
 const NicknameEdit = styled.input`
