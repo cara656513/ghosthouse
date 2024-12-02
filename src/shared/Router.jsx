@@ -28,6 +28,7 @@ const Router = () => {
             <Route path="main" element={<Main />} />
           </Route>
         </Route>
+        {/* </Route> */}
       </Routes>
     </BrowserRouter>
   );
