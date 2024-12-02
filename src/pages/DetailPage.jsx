@@ -1,7 +1,7 @@
-import PostDetial from '../components/postDetial/postDetial';
+import PostDetail from '../components/postDetail/postDetail';
 
 const DetailPage = () => {
-  return <PostDetial />;
+  return <PostDetail />;
 };
 
 export default DetailPage;

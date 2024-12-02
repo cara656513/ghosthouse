@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-const PostDetial = () => {
+const PostDetail = () => {
   const { id } = useParams(); // post 게시글 id를 가져올거
   //   const [comments, setComments] = useState([]); // 댓글 state
   const [postData, setPostData] = useState(null); //게시글 데이터 포스트 가져오기 관리
@@ -33,7 +33,7 @@ const PostDetial = () => {
     getPost();
   }, []);
 
-  return <div>postDetial</div>;
+  return <div>postDetail</div>;
 };
 
-export default PostDetial;
+export default PostDetail;
