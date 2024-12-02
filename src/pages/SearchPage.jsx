@@ -3,8 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import SearchPost from '../components/postDetail/SearchPost';
 
 const SearchPage = () => {
-  const [searchPost, setSearchPost] = useSearchParams('');
-  const [posts, setPosts] = useState([]);
+
 
   return <SearchPost />;
 };
