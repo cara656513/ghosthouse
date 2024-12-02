@@ -12,21 +12,10 @@ import {
   MyPageListProfileImg,
   MyNickname,
   OpenModalBtn
-} from '../components/mypage/myfropilestyle';
+} from '../components/mypage/myprofilestyle';
 
-import {
-  MypostList,
-  PostCard,
-  PostTitle,
-  PostCreated,
-  Popo,
-  PostMap,
-  PostImage,
-  PostText,
-  PostBut,
-  PostEditDelete
-} from '../components/mypage/postliststyle';
 import PostList from '../components/mypage/PostList';
+import MyProfile from '../components/mypage/MyProfile';
 
 const Wrap = styled.div`
   width: 100%;
@@ -253,7 +242,13 @@ const MyPage = () => {
 
   return (
     <Wrap>
-      <MyPofileTable>
+      <MyProfile
+        profileImg={profileImg}
+        nickname={nickname}
+        postCount={contents.postCount}
+        setIsModalOpen={setIsModalOpen}
+      />
+      {/* <MyPofileTable>
         <ProfileImageWrap>
           <MyPageListProfileImg src={profileImg || '/default-profile.png'} alt="Profile" />
         </ProfileImageWrap>
@@ -262,7 +257,7 @@ const MyPage = () => {
           <p>{contents.postCount}개의 게시물이 있습니다.</p>
         </ul>
         <OpenModalBtn onClick={() => setIsModalOpen(true)}>프로필 수정</OpenModalBtn>
-      </MyPofileTable>
+      </MyPofileTable> */}
 
       <PostList
         posts={contents.posts}

@@ -6,9 +6,9 @@ import {
   MyPageListProfileImg,
   MyNickname,
   OpenModalBtn
-} from '../components/mypage/myprofilestyle';
+} from '../../components/mypage/myprofilestyle';
 
-const Myf = ({ profileImg, nickname, postCount, setIsModalOpen }) => {
+const MyProfile = ({ profileImg, nickname, postCount, setIsModalOpen }) => {
   return (
     <MyPofileTable>
       <ProfileImageWrap>
@@ -23,4 +23,4 @@ const Myf = ({ profileImg, nickname, postCount, setIsModalOpen }) => {
   );
 };
 
-export default myfropile;
+export default MyProfile;
