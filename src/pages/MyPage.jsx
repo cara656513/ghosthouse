@@ -92,11 +92,12 @@ const CloseModalBtn = styled.button`
   color: #fff;
   border: none;
   border-radius: 5px;
+  padding: 10px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 10px;
   position: absolute;
-  bottom: 20px;
-  left: 50%;
+  top: 110px;
+  left: 75%;
   transform: translateX(-50%);
 
   &:hover {
@@ -117,6 +118,7 @@ const ProfileImage = styled.img`
 const ProfileInput = styled.input`
   text-indent: -99999em;
   border: 1px solid red;
+
   background-color: red;
   width: 25px;
   position: absolute;
@@ -288,7 +290,7 @@ const MyPage = () => {
           <MyPageListProfileImg src={profileImg} alt="Profile" />
         </ProfileImageWrap>
         <ul>
-          <p>{nickname}님 안녕하세요.</p>
+          <MyNickname>{nickname}님 안녕하세요.</MyNickname>
           <p>{contents.postCount}개 입니다.</p>
         </ul>
         <OpenModalBtn onClick={openModal}>프로필 수정</OpenModalBtn>
@@ -334,22 +336,22 @@ const MyPage = () => {
           <ModalContent onClick={(e) => e.stopPropagation()}>
             <ProfileContainer>
               <ProfileImage src={profileImg} alt="Profile" /> {/* 수정: 현재 프로필 이미지 표시 */}
-              <ProfileInput type="file" accept="image/*" onChange={handleFileChange} />
+              <ProfileInput type="file" accept="image/*" onChange={handleFileChange} placeholder="👻" />
               <button onClick={uploadAndSaveProfile}>프로필 수정 업로드</button>
             </ProfileContainer>
             <ModalProfile>
               {/* <h1>{userData?.nickname}님 프로필 페이지</h1> */}
               {/* <p>닉네임 변경하기</p> */}
-              <p>{nickname}님 안녕하세요</p>
-              <input
+              <NicknameText>{nickname}님 안녕하세요</NicknameText>
+              <NicknameEdit
                 type="text"
                 placeholder="새 닉네임"
                 value={newNickname}
                 onChange={(e) => setNewNickname(e.target.value)}
               />
-              <button onClick={updateNickname}>닉네임 변경</button>
+              <NicknameEditBtn onClick={updateNickname}>닉네임 변경</NicknameEditBtn>
             </ModalProfile>
-            <CloseModalBtn onClick={closeModal}>Close Modal</CloseModalBtn>
+            <CloseModalBtn onClick={closeModal}>X</CloseModalBtn>
           </ModalContent>
         </OverlayModal>
       )}
@@ -357,8 +359,29 @@ const MyPage = () => {
   );
 };
 
+const MyNickname = styled.p`
+  color: #a80101;
+`;
+
+const NicknameText = styled.p`
+  margin-left: 100px;
+`;
+
+const NicknameEditBtn = styled.button`
+  height: 43px;
+  border-radius: 10px;
+  margin-left: 20px;
+  margin-top: 30px;
+`;
+
+const NicknameEdit = styled.input`
+  height: 40px;
+  border-radius: 10px;
+  margin-left: 70px;
+`;
+
 const ModalProfile = styled.div`
-  background-color: green;
+  /* background-color: green; */
   position: absolute;
   font-size: 30px;
   top: 200px;
@@ -450,7 +473,7 @@ const ProfileContainer = styled.div`
   justify-content: start;
   align-items: center;
   width: 30%;
-  border: 1px solid red;
+  /* border: 1px solid red; */
   position: relative;
 `;
 
