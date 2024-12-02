@@ -17,13 +17,10 @@ const Router = () => {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
-
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-
           <Route element={<ProtectedRoute />}>
             <Route path="/mypage" element={<MyPage />} />
-
             <Route path="/newpost" element={<NewPostPage />} />
             <Route path="/detail" element={<DetailPage />} />
             <Route path="/profile" element={<ProfilePage />} />
@@ -31,7 +28,6 @@ const Router = () => {
             <Route path="/search?q" element={<SearchPage />} />
           </Route>
         </Route>
-        {/* </Route> */}
       </Routes>
     </BrowserRouter>
   );
