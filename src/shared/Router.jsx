@@ -9,6 +9,7 @@ import ProfilePage from '../pages/ProfilePage';
 import UpdatePostPage from '../pages/UpdatePostPage';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Layout from '../components/Layout';
+import Main from '../components/postDetial/Main';
 
 const Router = () => {
   return (
@@ -20,12 +21,18 @@ const Router = () => {
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
 
-          <Route path="/mypage" element={<ProtectedRoute element={MyPage} />} />
-          <Route path="/newpost" element={<ProtectedRoute element={NewPostPage} />} />
-          <Route path="/detail" element={<ProtectedRoute element={DetailPage} />} />
-          <Route path="/profile" element={<ProtectedRoute element={ProfilePage} />} />
-          <Route path="/updatepost" element={<ProtectedRoute element={UpdatePostPage} />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/mypage" element={<MyPage />} />
+
+            <Route path="/newpost" element={<NewPostPage />} />
+            <Route path="/detail" element={<DetailPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/updatepost" element={<UpdatePostPage />} />
+
+          </Route>
+
         </Route>
+        {/* </Route> */}
       </Routes>
     </BrowserRouter>
   );
