@@ -5,15 +5,6 @@ import { data, Navigate, useNavigate } from 'react-router-dom';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import Modal from '../components/mypage/Modal';
-
-import {
-  MyPofileTable,
-  ProfileImageWrap,
-  MyPageListProfileImg,
-  MyNickname,
-  OpenModalBtn
-} from '../components/mypage/myprofilestyle';
-
 import PostList from '../components/mypage/PostList';
 import MyProfile from '../components/mypage/MyProfile';
 
@@ -255,6 +246,7 @@ const MyPage = () => {
         handleDelete={handleDelete}
         longitude={longitude}
         latitude={latitude}
+        position={{ lng: longitude, lat: latitude }}
       />
 
       {isModalOpen && (

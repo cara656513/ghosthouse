@@ -1,5 +1,5 @@
 import React from 'react';
-import { Map } from 'react-kakao-maps-sdk';
+import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import {
   MypostList,
   PostCard,
@@ -25,7 +25,7 @@ const PostImg = styled.img`
   width: 300px;
 `;
 
-const PostList = ({ posts, handleDitailpage, handleDelete, longitude, latitude }) => {
+const PostList = ({ posts, handleDitailpage, handleDelete, longitude, latitude, position }) => {
   return (
     <MypostList>
       {posts.map((item) => (
@@ -42,7 +42,9 @@ const PostList = ({ posts, handleDitailpage, handleDelete, longitude, latitude }
                 height: '300px'
               }}
               level={3}
-            />
+            >
+              <MapMarker position={position ?? { lng: longitude, lat: latitude }} />
+            </Map>
           </Postitem>
           {/* <PostImg src={item.post_img} /> */}
           <PostText>{item.content}</PostText>
