@@ -248,16 +248,6 @@ const MyPage = () => {
         postCount={contents.postCount}
         setIsModalOpen={setIsModalOpen}
       />
-      {/* <MyPofileTable>
-        <ProfileImageWrap>
-          <MyPageListProfileImg src={profileImg || '/default-profile.png'} alt="Profile" />
-        </ProfileImageWrap>
-        <ul>
-          <p>{nickname}님 안녕하세요.</p>
-          <p>{contents.postCount}개의 게시물이 있습니다.</p>
-        </ul>
-        <OpenModalBtn onClick={() => setIsModalOpen(true)}>프로필 수정</OpenModalBtn>
-      </MyPofileTable> */}
 
       <PostList
         posts={contents.posts}
