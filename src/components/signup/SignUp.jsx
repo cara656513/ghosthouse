@@ -85,7 +85,7 @@ function SignUp() {
       return;
     }
 
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -95,17 +95,6 @@ function SignUp() {
 
     if (error) {
       setMessage({ text: error.message, type: 'error' });
-      return;
-    }
-
-    const { error: insertError } = await supabase.from('users').insert([{ id: data.user.id, email, nickname }]);
-
-    if (insertError) {
-      setMessage({
-        text: '회원정보 저장 중 문제가 발생했습니다.',
-        type: 'error'
-      });
-      console.log(insertError);
       return;
     }
 
