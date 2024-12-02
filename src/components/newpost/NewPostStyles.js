@@ -68,3 +68,18 @@ export const ModalContent = styled.div`
 export const Input = styled.input`
   height: 285px;
 `;
+
+export const Label = styled.label`
+  font-size: 50px;
+  text-align: center;
+  display: grid;
+  place-items: center;
+  height: 400px;
+`;
+
+export const Img = styled.img`
+  width: 100%;
+  max-width: 400px;
+  max-height: 400px;
+  object-fit: cover;
+`;

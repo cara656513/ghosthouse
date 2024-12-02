@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Form,
+  Img,
   Input,
+  Label,
   ModalContent,
   ModalOverlay,
   WholeContainer
@@ -14,9 +16,33 @@ import uploadFile from '../components/newpost/UploadFile';
 
 const NewPost = () => {
   const [userid, setUserid] = useState();
-  const [input, setInput] = useState({ img: null, title: '' });
   const [previewImg, setPreviewImg] = useState('');
   const navigate = useNavigate();
+  const [center, setCenter] = useState({
+    lat: 33.450701,
+    lng: 126.570667
+  });
+  const [position, setPosition] = useState(center);
+  const [input, setInput] = useState({ img: null, title: '', lat: center.lat, lng: center.lng });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      //로그인한 사람 데이터 찾기
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError) {
+        console.error('Error fetching user:', userError);
+        return;
+      }
+      setUserid(userData.user.id);
+    };
+    fetchData();
+
+    //현위치
+    navigator.geolocation.getCurrentPosition((pos) => {
+      setCenter({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+      setPosition({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+    });
+  }, []);
 
   const handleImgInputChange = (e) => {
     const { files } = e.target;
@@ -36,50 +62,30 @@ const NewPost = () => {
     try {
       const updatingObj = {};
       const url = await uploadFile(input);
-      updatingObj.picture = url;
+      updatingObj.post_img = url;
+      updatingObj.title = input.title;
       updatingObj.content = input.text;
+      updatingObj.longitude = input.lng;
+      updatingObj.latitude = input.lat;
 
       const { data, error } = await supabase.from('posts').insert({
-        user_id: '56f67586-3439-4b17-8ace-2e1a1776a029',
+        user_id: userid,
         ...updatingObj
       });
 
-      if (error) throw error;
-
+      console.log('Post data:', data);
       alert('글이 등록되었습니다!');
       navigate('/');
-      console.log('Post data:', data);
 
-      setInput({ img: null, text: '' });
+      if (error) throw error;
     } catch (error) {
       console.error('Error submitting post:', error.message);
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      //로그인한 사람 데이터 찾기
-      const { data: userData, error: userError } = await supabase.auth.getUser();
-      if (userError) {
-        console.error('Error fetching user:', userError);
-        return;
-      }
-      setUserid(userData.user.id);
-    };
-
-    fetchData();
-  }, []);
-
   //모달창
   const [modalOpen, setModalOpen] = useState(false);
   const modalBackground = useRef();
-
-  //지도 좌표
-  const center = {
-    lat: 33.450701,
-    lng: 126.570667
-  };
-  const [position, setPosition] = useState({});
 
   return (
     <>
@@ -91,28 +97,8 @@ const NewPost = () => {
                 display: 'flex'
               }}
             >
-              <label
-                style={{
-                  fontSize: '50px',
-                  textAlign: 'center',
-                  display: 'grid',
-                  placeItems: 'center',
-                  height: '400px'
-                }}
-              >
-                {previewImg ? (
-                  <img
-                    style={{
-                      width: '100%',
-                      maxWidth: '400px',
-                      maxHeight: '400px',
-                      objectFit: 'cover'
-                    }}
-                    src={previewImg}
-                  />
-                ) : (
-                  '+'
-                )}
+              <Label>
+                {previewImg ? <Img src={previewImg} /> : '+'}
                 <Input
                   type="file"
                   accept="image/*"
@@ -121,9 +107,8 @@ const NewPost = () => {
                   style={{
                     display: 'none'
                   }}
-                  required
                 />
-              </label>
+              </Label>
               <div
                 style={{
                   display: 'grid'
@@ -182,15 +167,14 @@ const NewPost = () => {
                       lat: latlng.getLat(),
                       lng: latlng.getLng()
                     });
+                    setInput({ ...input, lat: latlng.getLat(), lng: latlng.getLng() });
                   }}
                 >
-                  <MapMarker position={position ?? center} />
+                  <MapMarker position={position ? position : center} />
                 </Map>
-                <div id="clickLatlng">
-                  {position && `클릭한 위치의 위도는 ${position.lat} 이고, 경도는 ${position.lng} 입니다`}
-                </div>
+                <div>{position && `클릭한 위치의 위도는 ${position.lat} 이고, 경도는 ${position.lng} 입니다`}</div>
               </>
-              <button onClick={() => setModalOpen(false)}>❌</button>
+              <button onClick={() => setModalOpen(false)}>위치 선택 완료</button>
             </div>
           </ModalContent>
         </ModalOverlay>
