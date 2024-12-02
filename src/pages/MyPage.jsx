@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { data, Navigate, useNavigate } from 'react-router-dom';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { v4 as uuidv4 } from 'uuid';
+import Modal from '../components/mypage/Modal';
 import {
   OverlayModal,
   ModalContent,
@@ -112,7 +113,6 @@ const MyPage = () => {
     }
   };
 
-  console.log(longitude, latitude);
   // 닉네임 변경하기
   const updateNickname = async () => {
     if (!newNickname.trim()) {
@@ -302,26 +302,16 @@ const MyPage = () => {
       </MypostList>
 
       {isModalOpen && (
-        <OverlayModal onClick={() => setIsModalOpen(false)}>
-          <ModalContent onClick={(e) => e.stopPropagation()}>
-            <ProfileContainer>
-              <ProfileImage src={profileImg || '/default-profile.png'} alt="Profile" />
-              <ProfileInput type="file" accept="image/*" onChange={handleFileChange} />
-              <button onClick={uploadAndSaveProfile}>프로필 수정 업로드</button>
-            </ProfileContainer>
-            <ModalProfile>
-              <p>{nickname}님</p>
-              <input
-                type="text"
-                placeholder="새 닉네임"
-                value={newNickname}
-                onChange={(e) => setNewNickname(e.target.value)}
-              />
-              <button onClick={updateNickname}>닉네임 변경</button>
-            </ModalProfile>
-            <CloseModalBtn onClick={() => setIsModalOpen(false)}>닫기</CloseModalBtn>
-          </ModalContent>
-        </OverlayModal>
+        <Modal
+          profileImg={profileImg}
+          nickname={nickname}
+          newNickname={newNickname}
+          setNewNickname={setNewNickname}
+          handleFileChange={handleFileChange}
+          uploadAndSaveProfile={uploadAndSaveProfile}
+          setIsModalOpen={() => setIsModalOpen(false)}
+          updateNickname={updateNickname}
+        />
       )}
     </Wrap>
   );
