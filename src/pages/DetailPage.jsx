@@ -1,5 +1,7 @@
+import PostDetial from '../components/postDetial/postDetial';
+
 const DetailPage = () => {
-  return <div>DetailPage</div>;
+  return <PostDetial />;
 };
 
 export default DetailPage;

@@ -1,5 +1,11 @@
+import Main from './postDetial/Main';
+
 const Layout = () => {
-  return <div>Layout</div>;
+  return (
+    <div>
+      <Main />
+    </div>
+  );
 };
 
 export default Layout;

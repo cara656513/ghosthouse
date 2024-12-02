@@ -9,6 +9,7 @@ import ProfilePage from '../pages/ProfilePage';
 import UpdatePostPage from '../pages/UpdatePostPage';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Layout from '../components/Layout';
+import Main from '../components/postDetial/Main';
 
 const Router = () => {
   return (
@@ -24,6 +25,7 @@ const Router = () => {
             <Route path="/detail" element={<DetailPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/updatepost" element={<UpdatePostPage />} />
+            <Route path="main" element={<Main />} />
           </Route>
         </Route>
       </Routes>
