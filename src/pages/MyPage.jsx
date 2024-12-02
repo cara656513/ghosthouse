@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import supabase from '../utils/supabaseClient';
 import styled from 'styled-components';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 import {
   OverlayModal,
   ModalContent,
@@ -49,40 +50,44 @@ const MyPage = () => {
   const [selectedFile, setSelectedFile] = useState(null); // 업로드 파일 상태
   const [newNickname, setNewNickname] = useState(''); // 새 닉네임 상태
   const [userData, setUserData] = useState(null); // 사용자 데이터 상태
-  const [nickname, setNickname] = useState();
-  const navigate = useNavigate(); // 페이지 이동
+  const [nickname, setNickname] = useState('');
 
   // 사용자 정보 가져오기
   const fetchUserData = async () => {
     try {
-      const { data, error } = await supabase.auth.getUser();
-      if (error) throw error;
-      setUserData(data.user);
-      setProfileImg(data.user?.profile);
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+      if (authError) throw authError;
+
+      const userId = authData.user?.id;
+      if (!userId) throw new Error('User ID not found.');
+
+      const { data: user, error: userError } = await supabase
+        .from('users')
+        .select('id, nickname, profile_img')
+        .eq('id', userId)
+        .single();
+
+      if (userError) throw userError;
+
+      setUserData(user);
+      setNickname(user.nickname);
+      setProfileImg(user.profile_img);
     } catch (err) {
-      console.error('사용자 정보를 가져오는데 실패했습니다.', err.message);
+      console.error('Failed to fetch user data:', err.message);
     }
   };
 
   // 게시글 데이터 가져오기
   const fetchContents = async () => {
-    if (!userData) return;
+    if (!userData?.id) {
+      console.warn('User data is not initialized.');
+      return;
+    }
+
     try {
       const { data, count, error } = await supabase
         .from('posts')
-        .select(
-          `
-          id,
-          title,
-          content,
-          created_at,
-          users (
-            nickname,
-            profile
-          )
-        `,
-          { count: 'exact' }
-        )
+        .select('id, title, content, created_at', { count: 'exact' })
         .eq('user_id', userData.id);
 
       if (error) throw error;
@@ -91,9 +96,10 @@ const MyPage = () => {
         ...item,
         created_at: new Date(item.created_at).toISOString().slice(0, 16).replace('T', ' ')
       }));
+
       setContents({ posts: formattedData, postCount: count });
     } catch (err) {
-      console.error('게시글을 가져오는데 실패했습니다.', err.message);
+      console.error('Failed to fetch posts:', err.message);
     }
   };
 
@@ -103,12 +109,23 @@ const MyPage = () => {
       alert('닉네임을 입력해주세요.');
       return;
     }
+
+    if (!userData?.id) {
+      console.error('User data is not initialized.');
+      alert('사용자 데이터가 준비되지 않았습니다. 잠시 후 다시 시도해주세요.');
+      return;
+    }
+
     try {
       const { error } = await supabase.from('users').update({ nickname: newNickname }).eq('id', userData.id);
 
-      if (error) throw error;
-      alert('닉네임이 변경되었습니다!');
-      setUserData((prev) => ({ ...prev, nickname: newNickname }));
+      if (error) {
+        throw error;
+      }
+
+      alert('닉네임이 성공적으로 변경되었습니다!');
+      setNewNickname('');
+      await fetchUserData(); // 사용자 데이터 다시 로드
     } catch (err) {
       console.error('닉네임 변경 실패:', err.message);
       alert('닉네임 변경에 실패했습니다.');
@@ -116,149 +133,131 @@ const MyPage = () => {
   };
 
   // 파일 변경 핸들러
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0]; // 파일 선택
     if (file) {
-      setSelectedFile(file);
+      setSelectedFile(file); // 선택된 파일 상태로 저장
+
+      // 이미지 미리보기 URL 생성 (로컬)
       const previewUrl = URL.createObjectURL(file);
-      setNickname(data.nickname);
-      setProfileImg(previewUrl);
+      setProfileImg(previewUrl); // 미리보기 이미지로 설정
+
+      console.log('미리보기 URL:', previewUrl); // 디버그용 로그
     }
   };
 
-  // 이미지 업로드
+  // 이미지 업로드 함수
   const uploadImage = async (file) => {
-    const fileName = `${userData.id}-${Date.now()}`;
-    const filePath = `Profile/${fileName}`;
+    const fileName = `${userData.id}-${Date.now()}.png`; // 고유 파일 이름 생성
+    const filePath = `Profile_img/${fileName}`; // 업로드 경로
 
     try {
+      // 파일 업로드
       const { data, error } = await supabase.storage.from('Image').upload(filePath, file);
 
-      if (error) throw error;
-      const { publicUrl } = supabase.storage.from('Image').getPublicUrl(filePath);
-      return publicUrl;
+      if (error) {
+        console.error('파일 업로드 실패:', error.message);
+        throw error;
+      }
+
+      // 업로드된 파일 경로 확인
+      console.log('업로드된 경로:', data.path);
+
+      // Public URL 가져오기
+      const { data: publicData, error: publicError } = supabase.storage.from('Image').getPublicUrl(data.path);
+
+      if (publicError) {
+        console.error('Public URL 가져오기 실패:', publicError.message);
+        throw publicError;
+      }
+
+      console.log('업로드된 이미지 URL:', publicData.publicUrl);
+      return publicData.publicUrl;
     } catch (err) {
-      console.error('이미지 업로드 실패:', err.message);
+      console.error('이미지 업로드 중 오류 발생:', err.message);
       return null;
     }
   };
 
-  // 프로필 업로드 및 업데이트
+  // 프로필 업로드 및 업데이트 함수
   const uploadAndSaveProfile = async () => {
     if (!selectedFile) {
       alert('파일을 선택해주세요.');
       return;
     }
 
+    if (!userData?.id) {
+      console.error('사용자 데이터가 초기화되지 않았습니다.');
+      return;
+    }
+
+    // 이미지 업로드
     const imageUrl = await uploadImage(selectedFile);
     if (!imageUrl) {
       alert('이미지 업로드에 실패했습니다.');
       return;
     }
 
+    console.log('최종 업로드된 이미지 URL:', imageUrl); // 디버깅용 로그
+
     try {
-      const { error } = await supabase.from('users').update({ profile: imageUrl }).eq('id', userData.id);
+      // 사용자 데이터베이스에 프로필 URL 업데이트
+      const { error } = await supabase.from('users').update({ profile_img: imageUrl }).eq('id', userData.id);
 
       if (error) throw error;
-      alert('프로필 이미지가 업데이트되었습니다!');
-      setProfileImg(imageUrl);
+
+      alert('프로필 이미지가 성공적으로 업데이트되었습니다!');
+      setProfileImg(imageUrl); // UI에서 새 이미지로 업데이트
     } catch (err) {
       console.error('프로필 업데이트 실패:', err.message);
     }
   };
 
-  // 게시글 삭제하기
-  const handleDelete = async (postId) => {
-    try {
-      const { error } = await supabase.from('posts').delete().eq('id', postId);
-      if (error) throw error;
-      alert('게시글이 삭제되었습니다.');
-      setContents((prev) => prev.filter((post) => post.id !== postId));
-    } catch (err) {
-      console.error('게시글 삭제 실패:', err.message);
-      alert('게시글 삭제에 실패했습니다.');
-    }
-  };
-
-  // 게시글 수정 페이지 이동
-  const handleDitailpage = (postId) => {
-    navigate(`/edit/${postId}`);
-  };
-
-  // 모달 열고 닫기
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
-  // 컴포넌트가 로드될 때 사용자 정보 가져오기
+  // 사용자 정보 로드
   useEffect(() => {
     fetchUserData();
   }, []);
 
-  // 사용자 정보 변경 시 게시글 다시 로드
+  // 게시글 로드
   useEffect(() => {
-    fetchContents();
+    if (userData) {
+      fetchContents();
+    }
   }, [userData]);
 
   return (
     <Wrap>
       <MyPofileTable>
         <ProfileImageWrap>
-          <MyPageListProfileImg src={profileImg} alt="Profile" />
+          <MyPageListProfileImg src={profileImg || '/default-profile.png'} alt="Profile" />
         </ProfileImageWrap>
         <ul>
           <p>{nickname}님 안녕하세요.</p>
-          <p>{contents.postCount}개 입니다.</p>
+          <p>{contents.postCount}개의 게시물이 있습니다.</p>
         </ul>
-        <OpenModalBtn onClick={openModal}>프로필 수정</OpenModalBtn>
+        <OpenModalBtn onClick={() => setIsModalOpen(true)}>프로필 수정</OpenModalBtn>
       </MyPofileTable>
 
-      <hr style={{ borderColor: '#bebebe3', marginBottom: '40px' }} />
-      {/* //
-      //
-      // 마이페이지 내 게시물 리스트
-      //
-      // 
-      // */}
       <MypostList>
         {contents.posts.map((item) => (
           <PostCard key={item.id}>
             <PostTitle>{item.title}</PostTitle>
-            <PostCreated>{item.created_at} </PostCreated>
-            <Popo>
-              <PostMap>{}</PostMap>
-              <PostImage></PostImage>
-            </Popo>
+            <PostCreated>{item.created_at}</PostCreated>
             <PostText>{item.content}</PostText>
-            {/* <img src={item.image_url} alt={item.content || 'Image'} /> */}
-            <PostBut>
-              <PostEditDelete onClick={handleDitailpage}>수정</PostEditDelete>
-              <PostEditDelete onClick={handleDelete}>삭제</PostEditDelete>
-            </PostBut>
           </PostCard>
         ))}
-        {/* {error && <p>Error: {error}</p>} */}
       </MypostList>
-      {/* //
-      //
-      //
-      //
-      //
-      //
-      //
-      // */}
-      {/* // 프로필 수정하기 모달 */}
+
       {isModalOpen && (
-        <OverlayModal onClick={closeModal}>
+        <OverlayModal onClick={() => setIsModalOpen(false)}>
           <ModalContent onClick={(e) => e.stopPropagation()}>
             <ProfileContainer>
-              <ProfileImage src={profileImg} alt="Profile" /> {/* 수정: 현재 프로필 이미지 표시 */}
+              <ProfileImage src={profileImg || '/default-profile.png'} alt="Profile" />
               <ProfileInput type="file" accept="image/*" onChange={handleFileChange} />
               <button onClick={uploadAndSaveProfile}>프로필 수정 업로드</button>
             </ProfileContainer>
             <ModalProfile>
-              {/* <h1>{userData?.nickname}님 프로필 페이지</h1> */}
-              {/* <p>닉네임 변경하기</p> */}
-              <p>{nickname}님 안녕하세요</p>
+              <p>{nickname}님</p>
               <input
                 type="text"
                 placeholder="새 닉네임"
@@ -267,7 +266,7 @@ const MyPage = () => {
               />
               <button onClick={updateNickname}>닉네임 변경</button>
             </ModalProfile>
-            <CloseModalBtn onClick={closeModal}>Close Modal</CloseModalBtn>
+            <CloseModalBtn onClick={() => setIsModalOpen(false)}>닫기</CloseModalBtn>
           </ModalContent>
         </OverlayModal>
       )}
