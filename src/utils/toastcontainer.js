@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-const toastcontainer = styled(ToastContainer).attrs({
+const Toastcontainer = styled(ToastContainer).attrs({
   position: 'top-right',
   autoClose: 3000,
   hideProgressBar: false,
@@ -17,7 +17,8 @@ const toastcontainer = styled(ToastContainer).attrs({
     padding: 10px;
   }
   .Toastify__toast--success {
-    background-color: #2196f3;
+    background-color: black;
+    color: red;
   }
   .Toastify__toast--error {
     background-color: #f44336;
@@ -26,7 +27,8 @@ const toastcontainer = styled(ToastContainer).attrs({
     background-color: #4caf50;
   }
   .Toastify__toast--warning {
-    background-color: #ff9800;
+    background-color: black;
+    color: red;
   }
 `;
-export default toastcontainer;
+export default Toastcontainer;

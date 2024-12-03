@@ -20,9 +20,38 @@ const Postitem = styled.div`
   align-items: center;
 `;
 
+const PostImgWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+
 const PostImg = styled.img`
   height: 300px;
   width: 300px;
+  display: block;
+`;
+
+const HoverImage = styled.div`
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-image: url('/ghostmypage.png'); /* 큰 이미지 URL */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 700px; /* 큰 이미지 너비 */
+  height: 700px; /* 큰 이미지 높이 */
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out;
+
+  ${PostImgWrapper}:hover & {
+    opacity: 1;
+  }
 `;
 
 const PostList = ({ posts, handleDitailpage, handleDelete, longitude, latitude, position }) => {
@@ -34,7 +63,10 @@ const PostList = ({ posts, handleDitailpage, handleDelete, longitude, latitude, 
           <PostTitle>{item.title}</PostTitle>
           <PostCreated>{item.created_at}</PostCreated>
           <Postitem>
-            <PostImg src={item.post_img} />
+            <PostImgWrapper>
+              <PostImg src={item.post_img} />
+              <HoverImage />
+            </PostImgWrapper>
             <Map // 지도를 표시할 Container
               id="map"
               center={{ lng: item.longitude, lat: item.latitude }}

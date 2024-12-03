@@ -91,7 +91,7 @@ const HomeMap = () => {
         level={9} // 지도의 확대 레벨
       >
         {/*  */}
-        {newArr.map((position) => (
+        {newArr?.map((position) => (
           <MapMarker
             key={`${position.id}-${position.latlng}`}
             //position={position.latlng}

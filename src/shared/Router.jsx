@@ -26,7 +26,6 @@ const Router = () => {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/edit/:id?" element={<UpdatePostPage />} />
-
           </Route>
         </Route>
       </Routes>
