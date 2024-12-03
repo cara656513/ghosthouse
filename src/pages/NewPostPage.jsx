@@ -122,21 +122,15 @@ const NewPost = () => {
                   }}
                   onClick={() => setModalOpen(true)}
                 >
-                  현위치 기록하기
+                  Where are you now?
                 </button>
-                <input
-                  type="text"
-                  id="title"
-                  onChange={handleTxtInputChange}
-                  placeholder="제목을 입력하세요"
-                  required
-                ></input>
-                <Input type="text" id="text" onChange={handleTxtInputChange} placeholder="내용을 입력하세요" />
+                <input type="text" id="title" onChange={handleTxtInputChange} placeholder="title" required></input>
+                <Input type="text" id="text" onChange={handleTxtInputChange} placeholder="content" />
               </div>
             </div>
             <div>
-              <button type="submit">게시</button>
-              <button type="button">취소</button>
+              <button type="submit">submit</button>
+              <button type="button">cancle</button>
             </div>
           </Form>
         </Container>

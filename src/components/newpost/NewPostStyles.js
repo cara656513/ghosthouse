@@ -29,6 +29,8 @@ export const Form = styled.form`
 
     &::placeholder {
       color: white;
+      font-family: 'chiller', sans-serif;
+      font-size: 30px;
     }
   }
 
@@ -40,6 +42,8 @@ export const Form = styled.form`
     margin: 5px;
     padding: 10px;
     width: 200px;
+    font-family: 'chiller', sans-serif;
+    font-size: 30px;
   }
 `;
 
@@ -66,7 +70,7 @@ export const ModalContent = styled.div`
 `;
 
 export const Input = styled.input`
-  height: 285px;
+  height: 270px;
 `;
 
 export const Label = styled.label`
