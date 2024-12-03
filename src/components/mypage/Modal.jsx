@@ -9,7 +9,8 @@ import {
   NicknameText,
   NicknameEditBtn,
   CloseModalBtn,
-  ModalInput
+  ModalInput,
+  Nickname
 } from '../../components/mypage/modalstyle';
 
 const UploadProfileBtn = styled.button`
@@ -18,8 +19,16 @@ const UploadProfileBtn = styled.button`
   justify-content: start;
   align-items: center;
   margin-right: 50px;
-  background-color: black;
-  color: red;
+  background-color: #575555;
+  color: white;
+`;
+
+const ModalbackImg = styled.div`
+  position: absolute;
+  background-image: url('/background-img2.jpg');
+  opacity: 0.7;
+  height: 600px;
+  width: 900px;
 `;
 
 import React from 'react';
@@ -37,13 +46,14 @@ const Modal = ({
   return (
     <OverlayModal onClick={() => setIsModalOpen(false)}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
+        <ModalbackImg />
         <ProfileContainer>
           <ProfileImage src={profileImg || '/default-profile.png'} alt="Profile" />
           <ProfileInput type="file" accept="image/*" onChange={handleFileChange} />
           <UploadProfileBtn onClick={uploadAndSaveProfile}>프로필 수정하기</UploadProfileBtn>
         </ProfileContainer>
         <ModalProfile>
-          <p>{nickname}님</p>
+          <Nickname>{nickname}님</Nickname>
           <ModalInput
             type="text"
             placeholder="nickname"
@@ -52,7 +62,7 @@ const Modal = ({
           />
           <NicknameEditBtn onClick={updateNickname}>닉네임 변경</NicknameEditBtn>
         </ModalProfile>
-        <CloseModalBtn onClick={() => setIsModalOpen(false)}>닫기</CloseModalBtn>
+        <CloseModalBtn onClick={() => setIsModalOpen(false)}>X</CloseModalBtn>
       </ModalContent>
     </OverlayModal>
   );
