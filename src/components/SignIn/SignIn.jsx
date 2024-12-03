@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../../utils/supabaseClient';
+import { useMutation } from '@tanstack/react-query';
+import { create } from 'zustand';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
@@ -103,38 +105,56 @@ const SliderContainer = styled.div`
   filter: grayscale(70%) brightness(0.7);
 `;
 
+// Zustand 상태 관리
+const useUserStore = create((set) => ({
+  user: null,
+  setUser: (user) => set({ user })
+}));
+
+// 로그인 훅 분리
+const useSignInMutation = (setUser, navigate) => {
+  return useMutation({
+    mutationFn: async ({ email, password }) => {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        throw new Error('아이디 또는 비밀번호를 확인 해주세요.');
+      }
+
+      return data;
+    },
+    onSuccess: (data) => {
+      setUser(data.user);
+      navigate('/');
+    },
+    onError: (error) => {
+      console.error(error.message);
+    }
+  });
+};
+
 function SignIn() {
+  const navigate = useNavigate();
+  const { setUser } = useUserStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState({ text: '', type: '' });
-  const navigate = useNavigate();
 
-  const handleSignIn = async (e) => {
+  // 로그인 mutation 훅 사용
+  const mutation = useSignInMutation(setUser, navigate);
+
+  // 로그인 핸들러
+  const handleSignIn = (e) => {
     e.preventDefault();
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) {
-      setMessage({ text: error.message, type: 'error' });
-      return;
-    }
-
-    setMessage({
-      text: '로그인 성공!',
-      type: 'success'
-    });
-    navigate('/');
+    mutation.mutate({ email, password });
   };
 
+  // 슬라이드 설정
   const sliderSettings = {
     dots: true,
     infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2000
   };
@@ -148,7 +168,7 @@ function SignIn() {
           <Slider {...sliderSettings}>
             {images.map((src, index) => (
               <div key={index}>
-                <img src={src} alt={`Slide ${index}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src={src} alt={`Slide ${index}`} style={{ width: '100%', height: '100%' }} />
               </div>
             ))}
           </Slider>
@@ -157,12 +177,13 @@ function SignIn() {
           <Input type="email" placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} required />
           <Input
             type="password"
-            placeholder="password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          {message.text && <Message type={message.type}>{message.text}</Message>}
+          {mutation.isError && <Message type="error">{mutation.error.message}</Message>}
+          {mutation.isSuccess && <Message type="success">로그인 성공!</Message>}
           <Button type="submit">SIGN IN</Button>
         </Form>
       </FormContainer>

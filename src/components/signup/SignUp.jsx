@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { create } from 'zustand';
 import supabase from '../../utils/supabaseClient';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -103,53 +104,69 @@ const SliderContainer = styled.div`
   filter: grayscale(70%) brightness(0.7);
 `;
 
+// Zustand 전역 상태 관리
+const useStore = create((set) => ({
+  message: { text: '', type: '' },
+  setMessage: (newMessage) => set({ message: newMessage })
+}));
+
+// 비밀번호,닉네임 유효성 검사
+const validatePassword = (password) => {
+  const passwordRegex = /^(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{7,}$/;
+  if (!passwordRegex.test(password)) {
+    throw new Error('비밀번호는 7자 이상, 특수 문자를 포함해야 합니다.');
+  }
+};
+
+const validateNickname = (nickname) => {
+  if (nickname.trim().length < 2) {
+    throw new Error('닉네임은 최소 2글자 이상이어야 합니다.');
+  }
+};
+
+// 회원가입 컴포넌트
 function SignUp() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [nickname, setNickname] = useState('');
-  const [message, setMessage] = useState({ text: '', type: '' });
   const navigate = useNavigate();
+  const { message, setMessage } = useStore();
 
-  const handleSignUp = async (e) => {
-    e.preventDefault();
+  // 회원가입 Mutation
+  const mutation = useMutation({
+    mutationFn: async ({ email, password, nickname }) => {
+      validatePassword(password); // 비밀번호 유효성 검사
+      validateNickname(nickname); // 닉네임 유효성 검사
 
-    const passwordRegex = /^(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{7,}$/;
-    if (!passwordRegex.test(password)) {
-      setMessage({
-        text: '비밀번호는 7자 이상, 특수 문자를 포함해야 합니다.',
-        type: 'error'
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { nickname } } // 닉네임 추가 저장
       });
-      return;
-    }
 
-    if (nickname.trim().length < 2) {
-      setMessage({
-        text: '닉네임은 최소 2글자 이상이어야 합니다.',
-        type: 'error'
-      });
-      return;
-    }
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { nickname }
+      if (error) {
+        throw new Error('회원정보 저장 중 문제가 발생했습니다.');
       }
-    });
 
-    if (error) {
-      setMessage({ text: '회원정보 저장 중 문제가 발생했습니다.', type: 'error' });
-      return;
+      return '회원가입이 완료되었습니다.';
+    },
+    onSuccess: (data) => {
+      setMessage({ text: data, type: 'success' });
+      navigate('/signin'); // 성공 시 로그인 페이지로 이동
+    },
+    onError: (error) => {
+      setMessage({ text: error.message, type: 'error' }); // 에러 메시지 설정
     }
+  });
 
-    setMessage({
-      text: '회원가입이 완료되었습니다.',
-      type: 'success'
-    });
-    navigate('/signin');
+  // 폼 제출 핸들러
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    const nickname = e.target.nickname.value;
+
+    mutation.mutate({ email, password, nickname }); // 서버와 통신
   };
 
+  // 슬라이더 설정
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -160,6 +177,7 @@ function SignUp() {
     autoplaySpeed: 2000
   };
 
+  // 슬라이더 이미지 배열
   const images = [image1, image2, image3, image4];
 
   return (
@@ -174,22 +192,10 @@ function SignUp() {
             ))}
           </Slider>
         </SliderContainer>
-        <Form onSubmit={handleSignUp}>
-          <Input type="email" placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <Input
-            type="password"
-            placeholder="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <Input
-            type="text"
-            placeholder="nickname"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-            required
-          />
+        <Form onSubmit={handleSubmit}>
+          <Input type="email" name="email" placeholder="E-mail" required />
+          <Input type="password" name="password" placeholder="password" required />
+          <Input type="text" name="nickname" placeholder="nickname" required />
           {message.text && <Message type={message.type}>{message.text}</Message>}
           <Button type="submit">SIGN UP</Button>
         </Form>
