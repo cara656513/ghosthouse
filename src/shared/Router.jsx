@@ -22,11 +22,10 @@ const Router = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/newpost" element={<NewPostPage />} />
-            <Route path="/detail" element={<DetailPage />} />
+            <Route path="/detail/:id" element={<DetailPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/edit/:id?" element={<UpdatePostPage />} />
-
           </Route>
         </Route>
       </Routes>

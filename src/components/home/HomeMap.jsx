@@ -2,6 +2,7 @@ import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { MapContainer } from './homeStyle';
 import { useEffect, useState } from 'react';
 import supabase from '../../utils/supabaseClient';
+import { useNavigate } from 'react-router-dom';
 
 const HomeMap = () => {
   // 1. 현 사용자의 위치대로 지도 중심좌표 찍히게 하기 <완료>
@@ -13,7 +14,11 @@ const HomeMap = () => {
   // 4. 마커를 눌렀을 때 디테일 모달창이 보이게 하기(모달창 함수를 받아와서 마커 온클릭 했을 때 디테일이 보이게 하기)
 
   const [postData, setPostData] = useState([]);
+  const nav = useNavigate();
 
+  console.log('postData', postData);
+
+  // 포스츠 테이블의 모든 데이터 가져오기
   useEffect(() => {
     const getPostData = async () => {
       try {
@@ -31,11 +36,11 @@ const HomeMap = () => {
   }, []);
 
   // 아이디, 위도, 경도로만 이루어진 배열 데이터 만들기
-  const newArr = postData.map((item) => ({
-    id: item.id,
-    latlng: new window.kakao.maps.LatLng(item.latitude, item.longitude),
-    title: item.title
-  }));
+  // const newArr = postData.map((item) => ({
+  //   id: item.id,
+  //   latlng: new window.kakao.maps.LatLng(item.latitude, item.longitude),
+  //   title: item.title
+  // }));
 
   // 현 위치 정보 가져오기. 카카오지도 api 공식문서 참고
   const [state, setState] = useState({
@@ -90,12 +95,12 @@ const HomeMap = () => {
         }}
         level={9} // 지도의 확대 레벨
       >
-        {/*  */}
-        {newArr.map((position) => (
+        {postData.map((position) => (
           <MapMarker
-            key={`${position.id}-${position.latlng}`}
-            //position={position.latlng}
-            position={{ lat: position.latlng.Ma, lng: position.latlng.La }}
+            key={`${position.id}`}
+            // position={position.latlng}
+            // position={{ lat: position.latlng.Ma, lng: position.latlng.La }}
+            position={{ lat: position.latitude, lng: position.longitude }}
             image={{
               src: 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png', // 마커이미지의 주소입니다
               size: {
@@ -104,6 +109,7 @@ const HomeMap = () => {
               } // 마커이미지의 크기입니다
             }}
             title={position.title} // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+            onClick={() => nav(`/detail/${position.id}`)}
           />
         ))}
         {!state.isLoading && (
