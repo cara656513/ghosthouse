@@ -10,30 +10,10 @@ const FeedComponent = () => {
   const { id } = useParams(); // post 게시글 id를 가져올거
   const [comments, setComments] = useState([]); //댓글들 state
   const [newComments, setNewcomments] = useState(''); // 댓글 추가하기
-
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState(null);
-  console.log('posts', posts.users);
-  console.log('user', user);
-  console.log('comments', comments);
 
-  // 포스츠 테이블의 모든 데이터 가져오기
-  // useEffect(() => {
-  //   const getPostData = async () => {
-  //     try {
-  //       const { data, error } = await supabase.from('posts').select(`*,users(nickname)`).eq('id', id);
-  //       if (error) {
-  //         throw error;
-  //       }
-  //       setPosts(data);
-  //     } catch (error) {
-  //       console.error(error.message);
-  //       return;
-  //     }
-  //   };
-  //   getPostData();
-  // }, [id]);
-
+  // db 데이터 가져오기
   useEffect(() => {
     const getPost = async () => {
       try {
@@ -42,11 +22,11 @@ const FeedComponent = () => {
           throw error;
         }
         setPosts(post);
+        // 유저 데이터 가져올거
         const {
           data: { user },
           error: userError
         } = await supabase.auth.getUser();
-        // 유저 데이터 가져올거
         if (userError) {
           throw userError;
         }
@@ -113,15 +93,13 @@ const FeedComponent = () => {
           <h2>{`글 작성 : ${posts[0]?.users.nickname}`}</h2>
         </TitleWrap>
         <ImgWrap>
-          <img
-            src="https://i.namu.wiki/i/D-w7TbuyFXUOWmIK0a672ExM9mpiEJAnJzf30EHmfCp-3GVkhNmnonbMklnaB5LdvJEG_2H4HvTRN5J-ak31MQ.webp"
-            alt=""
-          />
+          <img src={posts[0]?.post_img} alt={posts[0]?.title} />
           <Map // 지도를 표시할 Container
             center={{ lat: posts[0]?.latitude, lng: posts[0]?.longitude }}
             style={{
               // 지도의 크기
-              width: '300px'
+              width: '300px',
+              height: '400px'
             }}
             level={11} // 지도의 확대 레벨
           >
@@ -163,7 +141,7 @@ const FeedComponent = () => {
 
 export default FeedComponent;
 
-const FeedContainer = styled.ul`
+export const FeedContainer = styled.ul`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -172,7 +150,7 @@ const FeedContainer = styled.ul`
   list-style: none;
 `;
 
-const FeedLi = styled.li`
+export const FeedLi = styled.li`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -182,7 +160,7 @@ const FeedLi = styled.li`
   padding: 20px;
 `;
 
-const TitleWrap = styled.div`
+export const TitleWrap = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -208,18 +186,19 @@ const TitleWrap = styled.div`
   }
 `;
 
-const ImgWrap = styled.div`
+export const ImgWrap = styled.div`
   display: flex;
   justify-content: center;
-  width: 100%;
   margin-bottom: 20px;
 
   img {
-    max-width: 100%;
+    width: 60%;
+    height: 400px;
+    object-fit: cover;
   }
 `;
 
-const ContentsWrap = styled.div`
+export const ContentsWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -265,7 +244,7 @@ const ContentsWrap = styled.div`
   }
 `;
 
-const CommentWrap = styled.div`
+export const CommentWrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -277,7 +256,7 @@ const CommentWrap = styled.div`
   }
 `;
 
-const CommentForm = styled.form`
+export const CommentForm = styled.form`
   display: flex;
   margin-top: 20px;
   width: 100%;
