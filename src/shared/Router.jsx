@@ -23,7 +23,7 @@ const Router = () => {
             <Route path="/newpost" element={<NewPostPage />} />
             <Route path="/detail" element={<DetailPage />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/updatepost" element={<UpdatePostPage />} />
+            <Route path="/edit/:id?" element={<UpdatePostPage />} />
           </Route>
         </Route>
       </Routes>
