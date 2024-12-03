@@ -4,6 +4,9 @@ import LoggedoutHeader from './LoggedoutHeader';
 import { NavHeader, NavLink } from './headerStyle';
 import supabase from '../../utils/supabaseClient';
 
+
+
+
 const Header = () => {
   //유저 로그인 상태
   const [isLoggedin, setIsLoggedin] = useState(null);
