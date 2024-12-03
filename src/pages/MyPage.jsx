@@ -4,38 +4,9 @@ import styled from 'styled-components';
 import { data, Navigate, useNavigate } from 'react-router-dom';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  OverlayModal,
-  ModalContent,
-  ProfileContainer,
-  ProfileImage,
-  ProfileInput,
-  ModalProfile,
-  NicknameText,
-  NicknameEditBtn,
-  CloseModalBtn
-} from '../components/mypage/modalstyle';
-
-import {
-  MyPofileTable,
-  ProfileImageWrap,
-  MyPageListProfileImg,
-  MyNickname,
-  OpenModalBtn
-} from '../components/mypage/myfrofilestyle';
-
-import {
-  MypostList,
-  PostCard,
-  PostTitle,
-  PostCreated,
-  Popo,
-  PostMap,
-  PostImage,
-  PostText,
-  PostBut,
-  PostEditDelete
-} from '../components/mypage/postliststyle';
+import Modal from '../components/mypage/Modal';
+import PostList from '../components/mypage/PostList';
+import MyProfile from '../components/mypage/MyProfile';
 
 const Wrap = styled.div`
   width: 100%;
@@ -99,8 +70,12 @@ const MyPage = () => {
 
       const formattedData = data.map((item) => ({
         ...item,
+        // post_img를 그대로 사용
+        post_img: item.post_img || null,
         created_at: new Date(item.created_at).toISOString().slice(0, 16).replace('T', ' ')
       }));
+
+      console.log('Formatted Data:', formattedData);
 
       setContents({ posts: formattedData, postCount: count });
     } catch (err) {
@@ -108,7 +83,6 @@ const MyPage = () => {
     }
   };
 
-  console.log(longitude, latitude);
   // 닉네임 변경하기
   const updateNickname = async () => {
     if (!newNickname.trim()) {
@@ -259,70 +233,37 @@ const MyPage = () => {
 
   return (
     <Wrap>
-      <MyPofileTable>
-        <ProfileImageWrap>
-          <MyPageListProfileImg src={profileImg || '/default-profile.png'} alt="Profile" />
-        </ProfileImageWrap>
-        <ul>
-          <p>{nickname}님 안녕하세요.</p>
-          <p>{contents.postCount}개의 게시물이 있습니다.</p>
-        </ul>
-        <OpenModalBtn onClick={() => setIsModalOpen(true)}>프로필 수정</OpenModalBtn>
-      </MyPofileTable>
+      <MyProfile
+        profileImg={profileImg}
+        nickname={nickname}
+        postCount={contents.postCount}
+        setIsModalOpen={setIsModalOpen}
+      />
 
-      <MypostList>
-        {contents.posts.map((item) => (
-          <PostCard key={item.id}>
-            <PostTitle>{item.title}</PostTitle>
-            <PostCreated>{item.created_at}</PostCreated>
-            <Map // 지도를 표시할 Container
-              id="map"
-              center={{ lng: longitude, lat: latitude }}
-              style={{
-                width: '40%',
-                height: '550px'
-              }}
-              level={3}
-            />
-            <PostImg>{item.post_img}</PostImg>
-            <PostText>{item.content}</PostText>
-            <PostBut>
-              <PostEditDelete onClick={() => handleDitailpage(item.id)}>수정</PostEditDelete>
-              <PostEditDelete onClick={() => handleDelete(item.id)}>삭제</PostEditDelete>
-            </PostBut>
-          </PostCard>
-        ))}
-      </MypostList>
+      <PostList
+        posts={contents.posts}
+        handleDitailpage={handleDitailpage}
+        handleDelete={handleDelete}
+        longitude={longitude}
+        latitude={latitude}
+        position={{ lng: longitude, lat: latitude }}
+      />
 
       {isModalOpen && (
-        <OverlayModal onClick={() => setIsModalOpen(false)}>
-          <ModalContent onClick={(e) => e.stopPropagation()}>
-            <ProfileContainer>
-              <ProfileImage src={profileImg || '/default-profile.png'} alt="Profile" />
-              <ProfileInput type="file" accept="image/*" onChange={handleFileChange} />
-              <button onClick={uploadAndSaveProfile}>프로필 수정 업로드</button>
-            </ProfileContainer>
-            <ModalProfile>
-              <p>{nickname}님</p>
-              <input
-                type="text"
-                placeholder="새 닉네임"
-                value={newNickname}
-                onChange={(e) => setNewNickname(e.target.value)}
-              />
-              <button onClick={updateNickname}>닉네임 변경</button>
-            </ModalProfile>
-            <CloseModalBtn onClick={() => setIsModalOpen(false)}>닫기</CloseModalBtn>
-          </ModalContent>
-        </OverlayModal>
+        <Modal
+          profileImg={profileImg}
+          nickname={nickname}
+          newNickname={newNickname}
+          setNewNickname={setNewNickname}
+          handleFileChange={handleFileChange}
+          uploadAndSaveProfile={uploadAndSaveProfile}
+          setIsModalOpen={() => setIsModalOpen(false)}
+          updateNickname={updateNickname}
+        />
       )}
     </Wrap>
   );
 };
-
-const PostImg = styled.image`
-  height: 500px;
-`;
 
 const NicknameEdit = styled.input`
   height: 40px;
