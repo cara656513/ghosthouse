@@ -50,12 +50,23 @@ export const ProfileImage = styled.img`
 export const ProfileInput = styled.input`
   text-indent: -99999em;
   border: 1px solid red;
-
   background-color: red;
   width: 25px;
   position: absolute;
   bottom: 70px;
   right: 50px;
+`;
+
+export const ModalInput = styled.input`
+  font-family: 'chiller', sans-serif;
+  height: 30px;
+  width: 300px;
+  border-radius: 10px;
+  font-size: 30px;
+  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4);
 `;
 
 export const ModalProfile = styled.div`

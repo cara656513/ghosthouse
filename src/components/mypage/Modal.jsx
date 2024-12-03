@@ -7,7 +7,8 @@ import {
   ModalProfile,
   NicknameText,
   NicknameEditBtn,
-  CloseModalBtn
+  CloseModalBtn,
+  ModalInput
 } from '../../components/mypage/modalstyle';
 
 import React from 'react';
@@ -32,9 +33,9 @@ const Modal = ({
         </ProfileContainer>
         <ModalProfile>
           <p>{nickname}님</p>
-          <input
+          <ModalInput
             type="text"
-            placeholder="새 닉네임"
+            placeholder="nickname"
             value={newNickname}
             onChange={(e) => setNewNickname(e.target.value)}
           />
