@@ -2,37 +2,70 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../../utils/supabaseClient';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Slider from 'react-slick';
+import image1 from '../../../public/slideImage/image1.png';
+import image2 from '../../../public/slideImage/image2.png';
+import image3 from '../../../public/slideImage/image3.png';
+import image4 from '../../../public/slideImage/image4.png';
 
 const SignUpContainer = styled.div`
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.8) url('/your-background-image.jpg') no-repeat center center;
+  background: url('/your-background-image.jpg') no-repeat center center;
   background-size: cover;
-  color: white;
+  filter: grayscale(50%) brightness(0.8);
+`;
+
+const FormContainer = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  width: 90%;
+  max-width: 1200px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 20px;
+  background: rgba(0, 0, 0, 0.9);
+  padding: 40px;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 1);
+  width: 400px;
 `;
 
 const Input = styled.input`
-  margin: 10px 0;
-  padding: 10px;
-  font-size: 1rem;
-  width: 80%;
-  border: 1px solid #ccc;
+  font-family: 'chiller', sans-serif;
+  width: 100%;
+  margin: 15px 0;
+  padding: 20px;
+  font-size: 25px;
+  border: none;
   border-radius: 5px;
-  outline: none;
+  color: white;
+  background: rgba(255, 255, 255, 0.514);
+  transition: background 0.3s;
+
+  &::placeholder {
+    color: red;
+    font-size: 2rem;
+  }
+
+  &:focus {
+    background: rgba(255, 255, 255, 0.2);
+    outline: none;
+  }
 `;
 
 const Message = styled.p`
@@ -43,19 +76,31 @@ const Message = styled.p`
 `;
 
 const Button = styled.button`
+  font-family: 'chiller', sans-serif;
   margin-top: 20px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  background-color: #4caf50;
-  color: white;
+  padding: 15px 30px;
+  font-size: 2rem;
+  background-color: black;
+  color: red;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, color 0.3s;
 
   &:hover {
-    background-color: #45a049;
+    background-color: red;
+    color: black;
   }
+`;
+
+const SliderContainer = styled.div`
+  flex: 1;
+  max-width: 450px;
+  height: 460px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 1);
+  border-radius: 10px;
+  filter: grayscale(70%) brightness(0.7);
 `;
 
 function SignUp() {
@@ -71,7 +116,7 @@ function SignUp() {
     const passwordRegex = /^(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{7,}$/;
     if (!passwordRegex.test(password)) {
       setMessage({
-        text: '비밀번호는 7자 이상이어야 하며 특수 문자를 포함해야 합니다.',
+        text: '비밀번호는 7자 이상, 특수 문자를 포함해야 합니다.',
         type: 'error'
       });
       return;
@@ -94,39 +139,61 @@ function SignUp() {
     });
 
     if (error) {
-      setMessage({ text: error.message, type: 'error' });
+      setMessage({ text: '회원정보 저장 중 문제가 발생했습니다.', type: 'error' });
       return;
     }
 
     setMessage({
-      text: '회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.',
+      text: '회원가입이 완료되었습니다.',
       type: 'success'
     });
     navigate('/signin');
   };
 
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000
+  };
+
+  const images = [image1, image2, image3, image4];
+
   return (
     <SignUpContainer>
-      <h1>회원가입</h1>
-      <Form onSubmit={handleSignUp}>
-        <Input type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <Input
-          type="password"
-          placeholder="비밀번호"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <Input
-          type="text"
-          placeholder="닉네임"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-          required
-        />
-        {message.text && <Message type={message.type}>{message.text}</Message>}
-        <Button type="submit">회원가입</Button>
-      </Form>
+      <FormContainer>
+        <SliderContainer>
+          <Slider {...sliderSettings}>
+            {images.map((src, index) => (
+              <div key={index}>
+                <img src={src} alt={`Slide ${index}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+            ))}
+          </Slider>
+        </SliderContainer>
+        <Form onSubmit={handleSignUp}>
+          <Input type="email" placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <Input
+            type="password"
+            placeholder="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <Input
+            type="text"
+            placeholder="nickname"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            required
+          />
+          {message.text && <Message type={message.type}>{message.text}</Message>}
+          <Button type="submit">SIGN UP</Button>
+        </Form>
+      </FormContainer>
     </SignUpContainer>
   );
 }
