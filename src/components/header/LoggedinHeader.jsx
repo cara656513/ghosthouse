@@ -2,12 +2,18 @@ import { useNavigate } from 'react-router-dom';
 import { ModalContainer, NavButton, NavLink } from './headerStyle';
 import { useState } from 'react';
 import ModalImg from './ModalImg';
+import supabase from '../../utils/supabaseClient';
 
 const LoggedinHeader = () => {
   const nav = useNavigate();
   const [modal, setModal] = useState(false);
 
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      alert('로그아웃 실패');
+      return;
+    }
     setModal(true);
     nav('/');
   };
