@@ -15,7 +15,7 @@ import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import uploadFile from './UploadFile';
 import { fetchUserData } from './fetchCrntUser';
 import { useQuery } from '@tanstack/react-query';
-import { fetchMyPosts } from './fetchMyPosts';
+import { fetchPostDetail } from '../../hooks/posts/usePost';
 
 const Postform = ({ mode, onSubmit }) => {
   const [previewImg, setPreviewImg] = useState('');
@@ -28,13 +28,25 @@ const Postform = ({ mode, onSubmit }) => {
   const [input, setInput] = useState({});
   const { id } = useParams();
 
+  const { data: post, isPending: isPostsPending } = useQuery({
+    queryKey: ['crntUserPosts'],
+    queryFn: async () => fetchPostDetail(id)
+  });
+
   useEffect(() => {
+    if (mode === 'editPost' && post) {
+      setPosition({ lng: post.longitude, lat: post.latitude });
+    } else if (mode === 'newPost') {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        setCenter({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+
+        setPosition(
+          pos ? { lat: pos.coords.latitude, lng: pos.coords.longitude } : { lat: 33.450701, lng: 126.570667 }
+        );
+      });
+    }
     //현위치
-    navigator.geolocation.getCurrentPosition((pos) => {
-      setCenter({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-      setPosition({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-    });
-  }, []);
+  }, [post]);
 
   const handleImgInputChange = (e) => {
     const { files } = e.target;
@@ -52,7 +64,7 @@ const Postform = ({ mode, onSubmit }) => {
     e.preventDefault();
     const updatingObj = {};
     const url = await uploadFile(input);
-    updatingObj.post_img = url;
+    if (input.img) updatingObj.post_img = url;
     updatingObj.title = input.title;
     updatingObj.content = input.text;
     updatingObj.longitude = input.lng;
@@ -73,13 +85,13 @@ const Postform = ({ mode, onSubmit }) => {
   });
 
   //my 게시물s
-  const { data: posts, isPending: isPostsPending } = useQuery({
-    queryKey: ['crntUserPosts'],
-    queryFn: async () => {
-      const response = await fetchMyPosts(user.id);
-      return response;
-    }
-  });
+  // const { data: posts, isPending: isPostsPending } = useQuery({
+  //   queryKey: ['crntUserPosts'],
+  //   queryFn: async () => {
+  //     const response = await fetchMyPosts(user.id);
+  //     return response;
+  //   }
+  // });
 
   if (isPending) {
     return <div>loading...</div>;
@@ -99,13 +111,7 @@ const Postform = ({ mode, onSubmit }) => {
               }}
             >
               <Label>
-                {previewImg ? (
-                  <Img src={previewImg} />
-                ) : mode === 'editPost' ? (
-                  <Img src={posts.filter((post) => post.id === id).map((post) => post.post_img)} />
-                ) : (
-                  '+'
-                )}
+                {previewImg ? <Img src={previewImg} /> : mode === 'editPost' ? <Img src={post?.post_img} /> : '+'}
                 <Input
                   type="file"
                   accept="image/*"
@@ -136,16 +142,14 @@ const Postform = ({ mode, onSubmit }) => {
                   onChange={handleTxtInputChange}
                   placeholder="title"
                   required
-                  value={input.title ? input.title : posts.filter((post) => post.id === id).map((post) => post.title)}
+                  value={input.title ? input.title : post?.title}
                 ></input>
                 <Input
                   type="text"
                   id="text"
                   onChange={handleTxtInputChange}
                   placeholder="content"
-                  defaultValue={
-                    input.text ? input.text : posts.filter((post) => post.id === id).map((post) => post.content)
-                  }
+                  defaultValue={input.text ? input.text : post?.content}
                 />
               </div>
             </div>
@@ -176,7 +180,7 @@ const Postform = ({ mode, onSubmit }) => {
           >
             <Map
               id="map"
-              center={position ? position : center}
+              center={position} //d여기
               style={{
                 width: '800px',
                 height: '500px'
@@ -191,7 +195,7 @@ const Postform = ({ mode, onSubmit }) => {
                 setInput({ ...input, lat: latlng.getLat(), lng: latlng.getLng() });
               }}
             >
-              <MapMarker position={position ? position : center} />
+              <MapMarker position={position} />
             </Map>
             <div>{position && `클릭한 위치의 위도는 ${position.lat} 이고, 경도는 ${position.lng} 입니다`}</div>
             <Button onClick={() => setModalOpen(false)}>위치 선택 완료</Button>
