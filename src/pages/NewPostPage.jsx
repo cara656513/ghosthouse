@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import supabase from '../utils/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import {
+  Button,
   Container,
   Form,
   Img,
@@ -13,9 +14,10 @@ import {
 } from '../components/newpost/NewPostStyles';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import uploadFile from '../components/newpost/UploadFile';
+import { fetchUserData } from '../components/newpost/fetchCrntUser';
+import { useQuery } from '@tanstack/react-query';
 
 const NewPost = () => {
-  const [userid, setUserid] = useState();
   const [previewImg, setPreviewImg] = useState('');
   const navigate = useNavigate();
   const [center, setCenter] = useState({
@@ -26,17 +28,6 @@ const NewPost = () => {
   const [input, setInput] = useState({ img: null, title: '', lat: center.lat, lng: center.lng });
 
   useEffect(() => {
-    const fetchData = async () => {
-      //로그인한 사람 데이터 찾기
-      const { data: userData, error: userError } = await supabase.auth.getUser();
-      if (userError) {
-        console.error('Error fetching user:', userError);
-        return;
-      }
-      setUserid(userData.user.id);
-    };
-    fetchData();
-
     //현위치
     navigator.geolocation.getCurrentPosition((pos) => {
       setCenter({ lat: pos.coords.latitude, lng: pos.coords.longitude });
@@ -53,7 +44,7 @@ const NewPost = () => {
 
   const handleTxtInputChange = (e) => {
     const { id, value } = e.target;
-    setInput((prev) => ({ ...prev, [id]: value }));
+    setInput((prev) => ({ ...prev, [id]: value, lat: position.lat, lng: position.lng }));
   };
 
   const handleSubmitPost = async (e) => {
@@ -86,6 +77,16 @@ const NewPost = () => {
   //모달창
   const [modalOpen, setModalOpen] = useState(false);
   const modalBackground = useRef();
+
+  //로그인한 유저
+  const { data: userid, isPending } = useQuery({
+    queryKey: ['crntUser'],
+    queryFn: fetchUserData
+  });
+
+  if (isPending) {
+    return <div>loading...</div>;
+  }
 
   return (
     <>
@@ -174,7 +175,7 @@ const NewPost = () => {
                 </Map>
                 <div>{position && `클릭한 위치의 위도는 ${position.lat} 이고, 경도는 ${position.lng} 입니다`}</div>
               </>
-              <button onClick={() => setModalOpen(false)}>위치 선택 완료</button>
+              <Button onClick={() => setModalOpen(false)}>위치 선택 완료</Button>
             </div>
           </ModalContent>
         </ModalOverlay>

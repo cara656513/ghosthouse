@@ -83,3 +83,13 @@ export const Img = styled.img`
   max-height: 400px;
   object-fit: cover;
 `;
+
+export const Button = styled.button`
+  border: transparent;
+  border-radius: 10px;
+  background-color: black;
+  color: red;
+  margin: 5px;
+  padding: 10px;
+  width: 200px;
+`;
