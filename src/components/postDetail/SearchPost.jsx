@@ -10,7 +10,10 @@ const SearchPost = () => {
   useEffect(() => {
     const getPost = async () => {
       try {
-        const { data: post, error } = await supabase.from('posts').select('*').ilike('title', `%${searchValue}%`);
+        const { data: post, error } = await supabase
+          .from('posts')
+          .select(`*, users(nickname , profile_img)`)
+          .ilike('title', `%${searchValue}%`);
         if (error) {
           throw error;
         }
