@@ -7,7 +7,6 @@ import supabase from '../../utils/supabaseClient';
 const Header = () => {
   //유저 로그인 상태
   const [isLoggedin, setIsLoggedin] = useState(null);
-  console.log('isLoggedin', isLoggedin);
 
   // 유저정보 가져오기
   useEffect(() => {

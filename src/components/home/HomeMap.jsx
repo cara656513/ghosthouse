@@ -30,14 +30,14 @@ const HomeMap = () => {
     getPostData();
   }, []);
 
+  // 아이디, 위도, 경도로만 이루어진 배열 데이터 만들기
   const newArr = postData.map((item) => ({
     id: item.id,
-    latlng: new window.kakao.maps.LatLng(item.latitude, item.longitude)
+    latlng: new window.kakao.maps.LatLng(item.latitude, item.longitude),
+    title: item.title
   }));
 
-  console.log('newArr', newArr);
-  // console.log('postData', postData);
-
+  // 현 위치 정보 가져오기. 카카오지도 api 공식문서 참고
   const [state, setState] = useState({
     center: {
       lat: 33.450701,
@@ -88,8 +88,9 @@ const HomeMap = () => {
           width: '70%',
           height: '450px'
         }}
-        level={3} // 지도의 확대 레벨
+        level={9} // 지도의 확대 레벨
       >
+        {/*  */}
         {newArr.map((position) => (
           <MapMarker
             key={`${position.id}-${position.latlng}`}
@@ -102,12 +103,12 @@ const HomeMap = () => {
                 height: 35
               } // 마커이미지의 크기입니다
             }}
-            // title={position.title} // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+            title={position.title} // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
           />
         ))}
         {!state.isLoading && (
           <MapMarker position={state.center}>
-            <div style={{ padding: '5px', color: '#000' }}>{state.errMsg ? state.errMsg : '여기에 계신가요?!'}</div>
+            <div style={{ padding: '5px', color: '#000' }}>{state.errMsg ? state.errMsg : '여기에 계신가요??'}</div>
           </MapMarker>
         )}
       </Map>
