@@ -26,6 +26,7 @@ const PostImg = styled.img`
 `;
 
 const PostList = ({ posts, handleDitailpage, handleDelete, longitude, latitude, position }) => {
+  console.log(posts);
   return (
     <MypostList>
       {posts.map((item) => (
@@ -36,14 +37,14 @@ const PostList = ({ posts, handleDitailpage, handleDelete, longitude, latitude, 
             <PostImg src={item.post_img} />
             <Map // 지도를 표시할 Container
               id="map"
-              center={{ lng: longitude, lat: latitude }}
+              center={{ lng: item.longitude, lat: item.latitude }}
               style={{
                 width: '300px',
                 height: '300px'
               }}
               level={3}
             >
-              <MapMarker position={position ?? { lng: longitude, lat: latitude }} />
+              <MapMarker position={position ?? { lng: item.longitude, lat: item.latitude }} />
             </Map>
           </Postitem>
           {/* <PostImg src={item.post_img} /> */}

@@ -60,7 +60,7 @@ const NewPost = () => {
       updatingObj.latitude = input.lat;
 
       const { data, error } = await supabase.from('posts').insert({
-        user_id: userid,
+        user_id: user.id,
         ...updatingObj
       });
 
@@ -79,7 +79,7 @@ const NewPost = () => {
   const modalBackground = useRef();
 
   //로그인한 유저
-  const { data: userid, isPending } = useQuery({
+  const { data: user, isPending } = useQuery({
     queryKey: ['crntUser'],
     queryFn: fetchUserData
   });
