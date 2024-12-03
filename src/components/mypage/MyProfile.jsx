@@ -15,8 +15,8 @@ const MyProfile = ({ profileImg, nickname, postCount, setIsModalOpen }) => {
         <MyPageListProfileImg src={profileImg || '/default-profile.png'} alt="Profile" />
       </ProfileImageWrap>
       <ul>
-        <p>{nickname}님 안녕하세요.</p>
-        <p>{postCount}개의 게시물이 있습니다.</p>
+        <p>{nickname} 님</p>
+        <p>{postCount}개 게시물</p>
       </ul>
       <OpenModalBtn onClick={() => setIsModalOpen(true)}>프로필 수정</OpenModalBtn>
     </MyPofileTable>

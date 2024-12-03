@@ -75,6 +75,8 @@ export const NicknameEditBtn = styled.button`
   border-radius: 10px;
   margin-left: 20px;
   margin-top: 30px;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: red;
 `;
 
 export const CloseModalBtn = styled.button`

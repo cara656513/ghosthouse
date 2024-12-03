@@ -38,7 +38,7 @@ const Modal = ({
             value={newNickname}
             onChange={(e) => setNewNickname(e.target.value)}
           />
-          <button onClick={updateNickname}>닉네임 변경</button>
+          <NicknameEditBtn onClick={updateNickname}>닉네임 변경</NicknameEditBtn>
         </ModalProfile>
         <CloseModalBtn onClick={() => setIsModalOpen(false)}>닫기</CloseModalBtn>
       </ModalContent>
