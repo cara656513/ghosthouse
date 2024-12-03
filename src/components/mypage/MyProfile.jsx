@@ -16,7 +16,7 @@ const MyProfile = ({ profileImg, nickname, postCount, setIsModalOpen }) => {
       </ProfileImageWrap>
       <ul>
         <p>{nickname} 님</p>
-        <p>{postCount}개 게시물</p>
+        <p>{postCount}Post</p>
       </ul>
       <OpenModalBtn onClick={() => setIsModalOpen(true)}>프로필 수정</OpenModalBtn>
     </MyPofileTable>

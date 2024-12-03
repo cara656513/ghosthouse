@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import {
   OverlayModal,
   ModalContent,
@@ -10,6 +11,16 @@ import {
   CloseModalBtn,
   ModalInput
 } from '../../components/mypage/modalstyle';
+
+const UploadProfileBtn = styled.button`
+  padding: 10px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-right: 50px;
+  background-color: black;
+  color: red;
+`;
 
 import React from 'react';
 
@@ -29,7 +40,7 @@ const Modal = ({
         <ProfileContainer>
           <ProfileImage src={profileImg || '/default-profile.png'} alt="Profile" />
           <ProfileInput type="file" accept="image/*" onChange={handleFileChange} />
-          <button onClick={uploadAndSaveProfile}>프로필 수정 업로드</button>
+          <UploadProfileBtn onClick={uploadAndSaveProfile}>프로필 수정하기</UploadProfileBtn>
         </ProfileContainer>
         <ModalProfile>
           <p>{nickname}님</p>

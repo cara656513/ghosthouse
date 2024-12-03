@@ -161,10 +161,4 @@ const MyPage = () => {
   );
 };
 
-const NicknameEdit = styled.input`
-  height: 40px;
-  border-radius: 10px;
-  margin-left: 70px;
-`;
-
 export default MyPage;

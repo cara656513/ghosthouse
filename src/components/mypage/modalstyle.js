@@ -53,8 +53,9 @@ export const ProfileInput = styled.input`
   background-color: red;
   width: 25px;
   position: absolute;
-  bottom: 70px;
+  bottom: -3px;
   right: 50px;
+  padding: 10px;
 `;
 
 export const ModalInput = styled.input`
