@@ -1,25 +1,39 @@
 import { useEffect, useRef, useState } from 'react';
 import supabase from '../utils/supabaseClient';
 import { useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
-import { Container, Form, Input, ModalContent, ModalOverlay, WholeContainer } from '../styles/NewPostStyles';
+import {
+  Button,
+  Container,
+  Form,
+  Img,
+  Input,
+  Label,
+  ModalContent,
+  ModalOverlay,
+  WholeContainer
+} from '../components/newpost/NewPostStyles';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
-
-const uploadFile = async (input) => {
-  const { data, error } = await supabase.storage.from('Image').upload(input.img.name + uuidv4(), input.img);
-  if (error) {
-    console.log(error);
-    throw error;
-  }
-  const { data: imgdata } = supabase.storage.from('Image').getPublicUrl(data.path);
-  return imgdata.publicUrl;
-};
+import uploadFile from '../components/newpost/UploadFile';
+import { fetchUserData } from '../components/newpost/fetchCrntUser';
+import { useQuery } from '@tanstack/react-query';
 
 const NewPost = () => {
-  const [userid, setUserid] = useState();
-  const [input, setInput] = useState({ img: null, text: '' });
   const [previewImg, setPreviewImg] = useState('');
   const navigate = useNavigate();
+  const [center, setCenter] = useState({
+    lat: 33.450701,
+    lng: 126.570667
+  });
+  const [position, setPosition] = useState(center);
+  const [input, setInput] = useState({ img: null, title: '', lat: center.lat, lng: center.lng });
+
+  useEffect(() => {
+    //현위치
+    navigator.geolocation.getCurrentPosition((pos) => {
+      setCenter({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+      setPosition({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+    });
+  }, []);
 
   const handleImgInputChange = (e) => {
     const { files } = e.target;
@@ -30,8 +44,7 @@ const NewPost = () => {
 
   const handleTxtInputChange = (e) => {
     const { id, value } = e.target;
-
-    setInput((prev) => ({ ...prev, [id]: value }));
+    setInput((prev) => ({ ...prev, [id]: value, lat: position.lat, lng: position.lng }));
   };
 
   const handleSubmitPost = async (e) => {
@@ -39,56 +52,41 @@ const NewPost = () => {
 
     try {
       const updatingObj = {};
-
-      if (input.img) {
-        const url = await uploadFile(input);
-        updatingObj.picture = url;
-      } else {
-        updatingObj.picture = null;
-      }
+      const url = await uploadFile(input);
+      updatingObj.post_img = url;
+      updatingObj.title = input.title;
       updatingObj.content = input.text;
+      updatingObj.longitude = input.lng;
+      updatingObj.latitude = input.lat;
 
       const { data, error } = await supabase.from('posts').insert({
         user_id: userid,
         ...updatingObj
       });
 
-      if (error) throw error;
-
+      console.log('Post data:', data);
       alert('글이 등록되었습니다!');
       navigate('/');
-      console.log('Post data:', data);
 
-      setInput({ img: null, text: '' });
+      if (error) throw error;
     } catch (error) {
       console.error('Error submitting post:', error.message);
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      //로그인한 사람 데이터 찾기
-      const { data: userData, error: userError } = await supabase.auth.getUser();
-      if (userError) {
-        console.error('Error fetching user:', userError);
-        return;
-      }
-      setUserid(userData.user.id);
-    };
-
-    fetchData();
-  }, []);
-
   //모달창
   const [modalOpen, setModalOpen] = useState(false);
   const modalBackground = useRef();
 
-  const center = {
-    // 지도의 중심좌표
-    lat: 33.450701,
-    lng: 126.570667
-  };
-  const [position, setPosition] = useState({});
+  //로그인한 유저
+  const { data: userid, isPending } = useQuery({
+    queryKey: ['crntUser'],
+    queryFn: fetchUserData
+  });
+
+  if (isPending) {
+    return <div>loading...</div>;
+  }
 
   return (
     <>
@@ -100,25 +98,8 @@ const NewPost = () => {
                 display: 'flex'
               }}
             >
-              <label
-                style={{
-                  fontSize: '50px',
-                  textAlign: 'center',
-                  display: 'grid',
-                  placeItems: 'center',
-                  height: '400px'
-                }}
-              >
-                {previewImg ? (
-                  <img
-                    style={{
-                      width: '100%'
-                    }}
-                    src={previewImg}
-                  />
-                ) : (
-                  '+'
-                )}
+              <Label>
+                {previewImg ? <Img src={previewImg} /> : '+'}
                 <Input
                   type="file"
                   accept="image/*"
@@ -128,8 +109,7 @@ const NewPost = () => {
                     display: 'none'
                   }}
                 />
-              </label>
-
+              </Label>
               <div
                 style={{
                   display: 'grid'
@@ -142,38 +122,38 @@ const NewPost = () => {
                   }}
                   onClick={() => setModalOpen(true)}
                 >
-                  현위치 기록하기
+                  Where are you now?
                 </button>
-                <input placeholder="제목을 입력하세요" required></input>
-                <Input type="text" id="text" onChange={handleTxtInputChange} placeholder="내용을 입력하세요" required />
+                <input type="text" id="title" onChange={handleTxtInputChange} placeholder="title" required></input>
+                <Input type="text" id="text" onChange={handleTxtInputChange} placeholder="content" />
               </div>
             </div>
             <div>
-              <button type="submit">게시</button>
-              <button type="button">취소</button>
+              <button type="submit">submit</button>
+              <button type="button">cancle</button>
             </div>
           </Form>
         </Container>
       </WholeContainer>
 
       {modalOpen && (
-        <ModalOverlay>
-          <ModalContent
-            ref={modalBackground}
-            onClick={(e) => {
-              if (e.target === modalBackground.current) {
-                setModalOpen(false);
-              }
-            }}
-          >
+        <ModalOverlay
+          ref={modalBackground}
+          onClick={(e) => {
+            if (e.target === modalBackground.current) {
+              setModalOpen(false);
+            }
+          }}
+        >
+          <ModalContent>
             <div>
               <>
                 <Map
                   id="map"
                   center={center}
                   style={{
-                    width: '700px',
-                    height: '350px'
+                    width: '800px',
+                    height: '500px'
                   }}
                   level={3} // 지도의 확대 레벨
                   onClick={(_, mouseEvent) => {
@@ -182,15 +162,14 @@ const NewPost = () => {
                       lat: latlng.getLat(),
                       lng: latlng.getLng()
                     });
+                    setInput({ ...input, lat: latlng.getLat(), lng: latlng.getLng() });
                   }}
                 >
-                  <MapMarker position={position ?? center} />
+                  <MapMarker position={position ? position : center} />
                 </Map>
-                <div id="clickLatlng">
-                  {position && `클릭한 위치의 위도는 ${position.lat} 이고, 경도는 ${position.lng} 입니다`}
-                </div>
+                <div>{position && `클릭한 위치의 위도는 ${position.lat} 이고, 경도는 ${position.lng} 입니다`}</div>
               </>
-              <button onClick={() => setModalOpen(false)}>모달 닫기</button>
+              <Button onClick={() => setModalOpen(false)}>위치 선택 완료</Button>
             </div>
           </ModalContent>
         </ModalOverlay>
