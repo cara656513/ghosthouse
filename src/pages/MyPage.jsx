@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import supabase from '../utils/supabaseClient';
 import styled from 'styled-components';
-import { data, Navigate, useNavigate } from 'react-router-dom';
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
-import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from 'react-router-dom';
 import Modal from '../components/mypage/Modal';
 import PostList from '../components/mypage/PostList';
 import MyProfile from '../components/mypage/MyProfile';
+import { useQuery } from '@tanstack/react-query';
+import { fetchUserData } from '../components/newpost/fetchCrntUser';
 
 const Wrap = styled.div`
   width: 100%;
@@ -28,18 +28,19 @@ const MyPage = () => {
   const navigate = useNavigate();
 
   // 사용자 정보 가져오기
-  const fetchUserData = async () => {
+  const fetchUserDatas = async (userId) => {
     try {
-      const { data: authData, error: authError } = await supabase.auth.getUser();
-      if (authError) throw authError;
+      // const { data: authData, error: authError } = await supabase.auth.getUser();
+      // if (authError) throw authError;
 
-      const userId = authData.user?.id;
-      if (!userId) throw new Error('User ID not found.');
+      // const userId = authData.user?.id;
+      // const userId = userid;
+      console.log(userId);
 
       const { data: user, error: userError } = await supabase
         .from('users')
         .select('id, nickname, profile_img')
-        .eq('id', userId)
+        .eq('id', userId.id)
         .single();
 
       if (userError) throw userError;
@@ -51,6 +52,30 @@ const MyPage = () => {
       console.error('Failed to fetch user data:', err.message);
     }
   };
+
+  const { data: userid, isPending } = useQuery({
+    queryKey: ['crntUser'],
+    queryFn: fetchUserData
+  });
+  console.log(userid);
+
+  // 사용자 정보 로드
+  useEffect(() => {
+    if (userid) {
+      fetchUserDatas(userid);
+    }
+  }, [userid]);
+
+  // 게시글 로드
+  useEffect(() => {
+    if (userData) {
+      fetchContents();
+    }
+  }, [userData]);
+
+  if (isPending) {
+    return <div>loading...</div>;
+  }
 
   // 게시글 데이터 가져오기
   const fetchContents = async () => {
@@ -105,7 +130,7 @@ const MyPage = () => {
 
       alert('닉네임이 성공적으로 변경되었습니다!');
       setNewNickname('');
-      await fetchUserData(); // 사용자 데이터 다시 로드
+      await fetchUserDatas(); // 사용자 데이터 다시 로드
     } catch (err) {
       console.error('닉네임 변경 실패:', err.message);
       alert('닉네임 변경에 실패했습니다.');
@@ -215,17 +240,6 @@ const MyPage = () => {
     }
   };
 
-  // 사용자 정보 로드
-  useEffect(() => {
-    fetchUserData();
-  }, []);
-
-  // 게시글 로드
-  useEffect(() => {
-    if (userData) {
-      fetchContents();
-    }
-  }, [userData]);
   // 게시글 수정 페이지 이동
   const handleDitailpage = (postId) => {
     navigate(`/edit/${postId}`);
