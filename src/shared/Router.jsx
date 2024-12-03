@@ -9,6 +9,7 @@ import ProfilePage from '../pages/ProfilePage';
 import UpdatePostPage from '../pages/UpdatePostPage';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Layout from '../components/Layout';
+import SearchPage from '../pages/SearchPage';
 
 const Router = () => {
   return (
@@ -23,7 +24,9 @@ const Router = () => {
             <Route path="/newpost" element={<NewPostPage />} />
             <Route path="/detail" element={<DetailPage />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/updatepost" element={<UpdatePostPage />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/edit/:id?" element={<UpdatePostPage />} />
+
           </Route>
         </Route>
       </Routes>

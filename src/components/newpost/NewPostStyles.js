@@ -7,9 +7,10 @@ export const WholeContainer = styled.div`
 `;
 
 export const Container = styled.div`
+  margin-top: 100px;
   padding: 100px;
   height: 100%;
-  background-color: #bdbdbd44;
+  background-color: #ffffff36;
 `;
 
 export const Form = styled.form`
@@ -28,6 +29,8 @@ export const Form = styled.form`
 
     &::placeholder {
       color: white;
+      font-family: 'chiller', sans-serif;
+      font-size: 30px;
     }
   }
 
@@ -39,6 +42,8 @@ export const Form = styled.form`
     margin: 5px;
     padding: 10px;
     width: 200px;
+    font-family: 'chiller', sans-serif;
+    font-size: 30px;
   }
 `;
 
@@ -65,5 +70,30 @@ export const ModalContent = styled.div`
 `;
 
 export const Input = styled.input`
-  height: 285px;
+  height: 270px;
+`;
+
+export const Label = styled.label`
+  font-size: 50px;
+  text-align: center;
+  display: grid;
+  place-items: center;
+  height: 400px;
+`;
+
+export const Img = styled.img`
+  width: 100%;
+  max-width: 400px;
+  max-height: 400px;
+  object-fit: cover;
+`;
+
+export const Button = styled.button`
+  border: transparent;
+  border-radius: 10px;
+  background-color: black;
+  color: red;
+  margin: 5px;
+  padding: 10px;
+  width: 200px;
 `;

@@ -1,6 +1,5 @@
 import { HomeForm, HomeH1, HomeWrap } from '../home/homeStyle';
 import { MdManageSearch } from 'react-icons/md';
-import hand from '../../assets/hand.png';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -31,7 +30,7 @@ const Home = ({ onScroll }) => {
           </button>
         </HomeForm>
       </div>
-      <img onClick={onScroll} src={hand} alt="hand" />
+      <img onClick={onScroll} src="./hand.png" alt="hand" />
     </HomeWrap>
   );
 };
