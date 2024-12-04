@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import supabase from '../utils/supabaseClient';
 import { useUserStore } from '../zustand/userStore';
 import { validateNickname, validatePassword } from '../utils/validation';
+import { useToastStore } from '../zustand/authStore';
 
 export const useAuthMutation = () => {
   const navigate = useNavigate();
   const { setUser } = useUserStore();
-  const { setMessage } = useUserStore(); // Zustand 스토어 사용
+  const { setMessage } = useToastStore(); // Zustand 스토어 사용
 
   const signUpMutation = useMutation({
     mutationFn: async ({ email, password, nickname }) => {
