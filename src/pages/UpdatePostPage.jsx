@@ -1,41 +1,31 @@
-import { Container, Form, Input, Label, WholeContainer } from '../components/newpost/NewPostStyles';
+import Postform from '../components/newpost/postform';
+import { useParams } from 'react-router-dom';
+import supabase from '../utils/supabaseClient';
 
 const UpdatePostPage = () => {
-  return (
-    <WholeContainer>
-      <Container>
-        <Form>
-          <div
-            style={{
-              display: 'flex'
-            }}
-          >
-            <Label></Label>
-            <div
-              style={{
-                display: 'grid'
-              }}
-            >
-              <button
-                type="button"
-                style={{
-                  width: '440px'
-                }}
-              >
-                현위치 수정하기
-              </button>
-              <input type="text" id="title" placeholder="수정할 제목을 입력하세요" required></input>
-              <Input type="text" id="text" placeholder="수정할 내용을 입력하세요" />
-            </div>
-          </div>
-          <div>
-            <button type="submit">수정</button>
-            <button type="button">취소</button>
-          </div>
-        </Form>
-      </Container>
-    </WholeContainer>
-  );
+  const { id } = useParams();
+
+  const editPost = async (user, updatingObj) => {
+    try {
+      const { data, error } = await supabase
+        .from('posts')
+        .update({
+          user_id: user.id,
+          ...updatingObj
+        })
+        .eq('id', `${id}`)
+        .select();
+
+      console.log('Post data:', data);
+      alert('글이 수정되었습니다!');
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error submitting post:', error.message);
+    }
+  };
+
+  return <Postform mode={'editPost'} onSubmit={editPost} />;
 };
 
 export default UpdatePostPage;
