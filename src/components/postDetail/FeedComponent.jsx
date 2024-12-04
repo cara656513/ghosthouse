@@ -5,13 +5,14 @@ import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useEffect, useState } from 'react';
 import supabase from '../../utils/supabaseClient';
 import { useParams } from 'react-router-dom';
+import { useUserStore } from '../../zustand/userStore';
 
 const FeedComponent = () => {
   const { id } = useParams(); // post 게시글 id를 가져올거
   const [comments, setComments] = useState([]); //댓글들 state
   const [newComments, setNewcomments] = useState(''); // 댓글 추가하기
   const [posts, setPosts] = useState([]);
-  const [user, setUser] = useState(null);
+  const user = useUserStore((state) => state.user);
 
   // db 데이터 가져오기
   useEffect(() => {
@@ -22,15 +23,6 @@ const FeedComponent = () => {
           throw error;
         }
         setPosts(post);
-        // 유저 데이터 가져올거
-        const {
-          data: { user },
-          error: userError
-        } = await supabase.auth.getUser();
-        if (userError) {
-          throw userError;
-        }
-        setUser(user);
       } catch (error) {
         console.error(error);
       }
@@ -38,15 +30,17 @@ const FeedComponent = () => {
     getPost();
   }, []);
 
+  console.log('user', user);
   // 댓글 가져오기
   const getComment = async () => {
     try {
-      const { data } = await supabase.from('comments').select(`*, users(nickname)`).eq('post_id', id);
+      const { data } = await supabase.from('comments').select(`*, users(*)`).eq('post_id', id);
       setComments(data);
     } catch (error) {
       console.error(error);
     }
   };
+  console.log('Comments', comments);
 
   useEffect(() => {
     getComment();
@@ -81,7 +75,7 @@ const FeedComponent = () => {
       }
       setComments(comments.filter((comment) => comment.id !== id));
     } catch (error) {
-      console.error('댓글 삭제 중 에러 발생:', error);
+      console.error(error);
     }
   };
 
@@ -125,9 +119,11 @@ const FeedComponent = () => {
                 <div key={comment.id}>
                   <span>
                     {comment.users.nickname} : {comment.comment}
-                    <button onClick={() => deleteComment(comment.id)}>
-                      <TiUserDelete />
-                    </button>
+                    {comment.users.id === user?.user.id && (
+                      <button onClick={() => deleteComment(comment.id)}>
+                        <TiUserDelete />
+                      </button>
+                    )}
                   </span>
                 </div>
               ))}
