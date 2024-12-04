@@ -11,6 +11,7 @@ import useUpdateNickname from '../hooks/mypage/useUpdateNickname';
 import useUserData from '../hooks/mypage/useUserData';
 import usePostData from '../hooks/mypage/usePostData';
 import usePostDataDelete from '../hooks/mypage/usePostDataDelete';
+import { useUserStore } from '../zustand/userStore';
 
 const Wrap = styled.div`
   width: 100%;
@@ -26,6 +27,7 @@ const MyPage = () => {
 
   // 사용자 정보 조회 커스텀 훅
   const { userData, nickname, fetchUserData } = useUserData();
+  console.log(userData);
 
   // 게시글 데이터 커스텀 훅
   const { longitude, latitude, fetchContents, setContents, contents } = usePostData(userData);

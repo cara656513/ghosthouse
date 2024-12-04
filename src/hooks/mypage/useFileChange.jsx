@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import supabase from '../../utils/supabaseClient';
+
 import { toast } from 'react-toastify';
+import supabase from '../../utils/supabaseClient';
 
 export const useFileChange = (userData) => {
   const [profileImg, setProfileImg] = useState(null); // 프로필 이미지 상태

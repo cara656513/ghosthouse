@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import supabase from '../../utils/supabaseClient';
 
-const usePostData = (userData) => {
+const usePostData = (user) => {
   const [longitude, setLongitude] = useState(0);
   const [latitude, setLatitude] = useState(0);
   const [contents, setContents] = useState({ posts: [], postCount: 0 }); // 게시글 상태
 
   // 게시글 데이터 가져오기
   const fetchContents = async () => {
-    if (!userData?.id) {
+    if (!user?.id) {
       console.warn('User data is not initialized.');
       return;
     }
@@ -17,7 +17,7 @@ const usePostData = (userData) => {
       const { data, count, error } = await supabase
         .from('posts')
         .select('id, title, content, created_at, post_img, longitude, latitude', { count: 'exact' })
-        .eq('user_id', userData.id);
+        .eq('user_id', user.id);
       setLongitude(data[0].longitude);
       setLatitude(data[0].latitude);
       if (error) throw error;
