@@ -5,10 +5,10 @@ import { data, Navigate, useNavigate } from 'react-router-dom';
 import Modal from '../components/mypage/Modal';
 import PostList from '../components/mypage/PostList';
 import MyProfile from '../components/mypage/MyProfile';
-import useUpdateUser from '../hooks/useUpdateUser';
 import { useFileChange } from '../hooks/useFileChange';
 import Toastcontainer from '../utils/toastcontainer';
 import { toast } from 'react-toastify';
+import useUpdateNickname from '../hooks/useUpdateNickname';
 
 const Wrap = styled.div`
   width: 100%;
@@ -84,7 +84,7 @@ const MyPage = () => {
   };
 
   // 닉네임 변경관련
-  const { updateNickname, newNickname, setNewNickname } = useUpdateUser(userData, fetchUserData);
+  const { updateNickname, newNickname, setNewNickname } = useUpdateNickname(userData, fetchUserData);
 
   // 프로필 이미직 관련
   const { handleFileChange, uploadAndSaveProfile, profileImg } = useFileChange(userData);
