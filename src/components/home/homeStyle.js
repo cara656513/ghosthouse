@@ -9,7 +9,7 @@ export const HomeWrap = styled.div`
   width: 100vw;
   text-align: center;
   img {
-    width: 30px;
+    width: 40px;
     position: fixed;
     bottom: 30px;
     cursor: pointer;
