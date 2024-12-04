@@ -3,11 +3,11 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 import { useAuthMutation } from '../../hooks/useAuthMutation';
-import { useNavigate } from 'react-router-dom';
+import { useToastStore } from '../../zustand/authStore';
 
 function SignUp() {
   const { signUpMutation } = useAuthMutation();
-  const navigate = useNavigate();
+  const { message } = useToastStore();
 
   // 폼 제출 핸들러
   const handleSubmit = (e) => {
@@ -17,7 +17,6 @@ function SignUp() {
     const nickname = e.target.nickname.value;
 
     signUpMutation.mutate({ email, password, nickname }); // 서버와 통신
-    navigate('/signin');
   };
 
   // 슬라이더 설정
@@ -50,7 +49,7 @@ function SignUp() {
           <Input type="email" name="email" placeholder="E-mail" required />
           <Input type="password" name="password" placeholder="password" required />
           <Input type="text" name="nickname" placeholder="nickname" required />
-          {Message.text && <Message type={Message.type}>{Message.text}</Message>}
+          {message.text && <Message type={message.type}>{message.text}</Message>}
           <Button type="submit">SIGN UP</Button>
         </Form>
       </FormContainer>

@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import supabase from '../utils/supabaseClient';
 import { useUserStore } from '../zustand/userStore';
 
+
 const Layout = () => {
   const { setUser } = useUserStore();
 

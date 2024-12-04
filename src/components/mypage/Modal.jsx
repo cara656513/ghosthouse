@@ -31,6 +31,14 @@ const ModalbackImg = styled.div`
   width: 900px;
 `;
 
+const ProfileImageNone = styled.div`
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  margin: 20px auto;
+  background-color: #575555;
+`;
+
 import React from 'react';
 
 const Modal = ({
@@ -48,7 +56,7 @@ const Modal = ({
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <ModalbackImg />
         <ProfileContainer>
-          <ProfileImage src={profileImg || '/default-profile.png'} alt="Profile" />
+          {profileImg ? <ProfileImage src={profileImg} alt="Profile" /> : <ProfileImageNone />}
           <ProfileInput type="file" accept="image/*" onChange={handleFileChange} />
           <UploadProfileBtn onClick={uploadAndSaveProfile}>프로필 수정하기</UploadProfileBtn>
         </ProfileContainer>

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import supabase from '../utils/supabaseClient';
-import { toast } from 'react-toastify';
 
-const useUpdateNickname = (userData) => {
-  const [newNickname, setNewNickname] = useState('');
+import { toast } from 'react-toastify';
+import supabase from '../../utils/supabaseClient';
+
+const useUpdateNickname = (userData, fetchUserData) => {
+  const [newNickname, setNewNickname] = useState(''); // 새 닉네임 상태
+
   const updateNickname = async () => {
     if (!newNickname.trim()) {
-      toast.warning('아오 입력해주세요.!');
+      toast.warning('닉네임을 입력해주세요.');
       return;
     }
 
@@ -31,7 +33,7 @@ const useUpdateNickname = (userData) => {
       toast.warning('닉네임 변경에 실패했습니다.');
     }
   };
-  return updateNickname;
+  return { updateNickname, newNickname, setNewNickname };
 };
 
 export default useUpdateNickname;
