@@ -1,10 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import supabase from '../utils/supabaseClient';
 import { toast } from 'react-toastify';
 
 export const useFileChange = (userData) => {
   const [profileImg, setProfileImg] = useState(null); // 프로필 이미지 상태
   const [selectedFile, setSelectedFile] = useState(null); // 업로드 파일 상태
+
+  // 로그인 , 새로고침시 supabase에 있는 유저의 프로필을 가져옴
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+      if (userData?.id) {
+        try {
+          const { data, error } = await supabase.from('users').select('profile_img').eq('id', userData.id).single();
+
+          if (error) throw error;
+
+          setProfileImg(data.profile_img);
+        } catch (err) {
+          console.error('프로필 이미지를 불러오지 못했습니다.', err.message);
+        }
+      }
+    };
+    fetchProfileImage();
+  }, [userData]);
+
+  //파일 선택 핸들러
   const handleFileChange = async (e) => {
     const file = e.target.files[0]; // 파일 선택
     if (file) {
@@ -13,7 +33,6 @@ export const useFileChange = (userData) => {
       // 이미지 미리보기 URL 생성 (로컬)
       const previewUrl = URL.createObjectURL(file);
       setProfileImg(previewUrl); // 미리보기 이미지로 설정
-
       console.log('미리보기 URL:', previewUrl); // 디버그용 로그
     }
   };
@@ -84,5 +103,6 @@ export const useFileChange = (userData) => {
       console.error('프로필 업데이트 실패:', err.message);
     }
   };
+
   return { handleFileChange, uploadAndSaveProfile, profileImg };
 };

@@ -12,7 +12,7 @@ const MyProfile = ({ profileImg, nickname, postCount, setIsModalOpen }) => {
   return (
     <MyPofileTable>
       <ProfileImageWrap>
-        <MyPageListProfileImg src={profileImg || '/default-profile.png'} alt="Profile" />
+        <MyPageListProfileImg src={profileImg} alt="Profile" />
       </ProfileImageWrap>
       <ul>
         <p>{nickname} 님</p>

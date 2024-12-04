@@ -24,6 +24,7 @@ const MyPage = () => {
   const [nickname, setNickname] = useState('');
   const [longitude, setLongitude] = useState(0);
   const [latitude, setLatitude] = useState(0);
+
   const navigate = useNavigate();
 
   // 사용자 정보 가져오기
@@ -88,6 +89,7 @@ const MyPage = () => {
   // 프로필 이미직 관련
   const { handleFileChange, uploadAndSaveProfile, profileImg } = useFileChange(userData);
 
+  // 내 게시물 삭제
   const handleDelete = async (postId) => {
     try {
       // 삭제를 테스트 하기 위해서 임시 값을 넣어둠

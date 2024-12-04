@@ -49,8 +49,8 @@ export const MyPageListProfileImg = styled.img`
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background: url(./ghostProfileImg.png) no-repeat center/cover; /* 대체 이미지 설정 */
-    transform: translate(-70%, -70%) scale(1);
+    background-image: url(./ghostProfileImg.png) no-repeat center/cover; /* 대체 이미지 설정 */
+    transform: translate(-71%, -71%) scale(1);
     opacity: 1; /* 항상 표시 */
     z-index: 1; /* 기존 이미지 위에 나타남 */
     transition: transform 0.3s ease, opacity 0.3s ease;
