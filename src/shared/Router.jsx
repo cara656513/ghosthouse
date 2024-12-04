@@ -23,10 +23,10 @@ const Router = () => {
           <Route path="/detail/:id" element={<DetailPage />} />
 
           {/* 게스트 라우트: 로그인 안한 사람만 */}
-          {/* <Route element={<GuestRoute />}> */}
-          <Route path="/signin" element={<SignInPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          {/* </Route> */}
+          <Route element={<GuestRoute />}>
+            <Route path="/signin" element={<SignInPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+          </Route>
 
           {/* 프로텍티드 라우트: 로그인 한 사람만 */}
           <Route element={<ProtectedRoute />}>
