@@ -1,38 +1,26 @@
-import { useEffect, useState } from 'react';
 import LoggedinHeader from './LoggedinHeader';
 import LoggedoutHeader from './LoggedoutHeader';
-import { NavHeader, NavLink } from './headerStyle';
-import supabase from '../../utils/supabaseClient';
-
-
-
+import { NavButton, NavHeader } from './headerStyle';
+import { useUserStore } from '../../zustand/userStore';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
-  //유저 로그인 상태
-  const [isLoggedin, setIsLoggedin] = useState(null);
-
   // 유저정보 가져오기
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const { data, error } = await supabase.auth.getUser();
-        if (error) throw error;
-        console.log('유저 정보:', data.user); // 유저 정보 확인
-        setIsLoggedin(data.user);
-      } catch (error) {
-        console.log(error);
-        console.error('유저 정보를 가져오는 중 오류 발생:', error.message);
-      }
-    };
-    fetchUser();
-  }, []);
+  const user = useUserStore((state) => state.user);
+  console.log('user', user);
+  const nav = useNavigate();
+
+  const homeHandler = () => {
+    nav('/');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <NavHeader>
       <div>
-        <NavLink to={'/'}>GHOST HOUSE</NavLink>
+        <NavButton onClick={homeHandler}>GHOST HOUSE</NavButton>
       </div>
-      <div>{isLoggedin ? <LoggedinHeader /> : <LoggedoutHeader />}</div>
+      <div>{user ? <LoggedinHeader /> : <LoggedoutHeader />}</div>
     </NavHeader>
   );
 };

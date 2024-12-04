@@ -13,7 +13,7 @@ const Layout = () => {
       const {
         data: { user }
       } = await supabase.auth.getUser();
-      setUser({ user });
+      setUser(user);
     };
     initializeAuth();
   }, [setUser]);
