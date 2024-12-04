@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import supabase from '../utils/supabaseClient';
 import styled from 'styled-components';
 import { data, Navigate, useNavigate } from 'react-router-dom';
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
-import { v4 as uuidv4 } from 'uuid';
 import Modal from '../components/mypage/Modal';
 import PostList from '../components/mypage/PostList';
 import MyProfile from '../components/mypage/MyProfile';
+import useUpdateUser from '../hooks/useUpdateUser';
+import { useFileChange } from '../hooks/useFileChange';
+import Toastcontainer from '../utils/toastcontainer';
+import { toast } from 'react-toastify';
 
 const Wrap = styled.div`
   width: 100%;
@@ -18,9 +20,6 @@ const Wrap = styled.div`
 const MyPage = () => {
   const [contents, setContents] = useState({ posts: [], postCount: 0 }); // 게시글 상태
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  const [profileImg, setProfileImg] = useState(null); // 프로필 이미지 상태
-  const [selectedFile, setSelectedFile] = useState(null); // 업로드 파일 상태
-  const [newNickname, setNewNickname] = useState(''); // 새 닉네임 상태
   const [userData, setUserData] = useState(null); // 사용자 데이터 상태
   const [nickname, setNickname] = useState('');
   const [longitude, setLongitude] = useState(0);
@@ -46,7 +45,7 @@ const MyPage = () => {
 
       setUserData(user);
       setNickname(user.nickname);
-      setProfileImg(user.profile_img);
+      // setProfileImg(user.profile_img);
     } catch (err) {
       console.error('Failed to fetch user data:', err.message);
     }
@@ -83,115 +82,11 @@ const MyPage = () => {
     }
   };
 
-  // 닉네임 변경하기
-  const updateNickname = async () => {
-    if (!newNickname.trim()) {
-      alert('닉네임을 입력해주세요.');
-      return;
-    }
+  // 닉네임 변경관련
+  const { updateNickname, newNickname, setNewNickname } = useUpdateUser(userData, fetchUserData);
 
-    if (!userData?.id) {
-      console.error('User data is not initialized.');
-      alert('사용자 데이터가 준비되지 않았습니다. 잠시 후 다시 시도해주세요.');
-      return;
-    }
-
-    try {
-      const { error } = await supabase.from('users').update({ nickname: newNickname }).eq('id', userData.id);
-
-      if (error) {
-        throw error;
-      }
-
-      alert('닉네임이 성공적으로 변경되었습니다!');
-      setNewNickname('');
-      await fetchUserData(); // 사용자 데이터 다시 로드
-    } catch (err) {
-      console.error('닉네임 변경 실패:', err.message);
-      alert('닉네임 변경에 실패했습니다.');
-    }
-  };
-
-  // 파일 변경 핸들러
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0]; // 파일 선택
-    if (file) {
-      setSelectedFile(file); // 선택된 파일 상태로 저장
-
-      // 이미지 미리보기 URL 생성 (로컬)
-      const previewUrl = URL.createObjectURL(file);
-      setProfileImg(previewUrl); // 미리보기 이미지로 설정
-
-      console.log('미리보기 URL:', previewUrl); // 디버그용 로그
-    }
-  };
-
-  // 이미지 업로드 함수
-  const uploadImage = async (file) => {
-    const fileName = `${userData.id}-${Date.now()}.png`; // 고유 파일 이름 생성
-    const filePath = `Profile_img/${fileName}`; // 업로드 경로
-
-    try {
-      // 파일 업로드
-      const { data, error } = await supabase.storage.from('Image').upload(filePath, file);
-
-      if (error) {
-        console.error('파일 업로드 실패:', error.message);
-        throw error;
-      }
-
-      // 업로드된 파일 경로 확인
-      console.log('업로드된 경로:', data.path);
-
-      // Public URL 가져오기
-      const { data: publicData, error: publicError } = supabase.storage.from('Image').getPublicUrl(data.path);
-
-      if (publicError) {
-        console.error('Public URL 가져오기 실패:', publicError.message);
-        throw publicError;
-      }
-
-      console.log('업로드된 이미지 URL:', publicData.publicUrl);
-      return publicData.publicUrl;
-    } catch (err) {
-      console.error('이미지 업로드 중 오류 발생:', err.message);
-      return null;
-    }
-  };
-
-  // 프로필 업로드 및 업데이트 함수
-  const uploadAndSaveProfile = async () => {
-    if (!selectedFile) {
-      alert('파일을 선택해주세요.');
-      return;
-    }
-
-    if (!userData?.id) {
-      console.error('사용자 데이터가 초기화되지 않았습니다.');
-      return;
-    }
-
-    // 이미지 업로드
-    const imageUrl = await uploadImage(selectedFile);
-    if (!imageUrl) {
-      alert('이미지 업로드에 실패했습니다.');
-      return;
-    }
-
-    console.log('최종 업로드된 이미지 URL:', imageUrl); // 디버깅용 로그
-
-    try {
-      // 사용자 데이터베이스에 프로필 URL 업데이트
-      const { error } = await supabase.from('users').update({ profile_img: imageUrl }).eq('id', userData.id);
-
-      if (error) throw error;
-
-      alert('프로필 이미지가 성공적으로 업데이트되었습니다!');
-      setProfileImg(imageUrl); // UI에서 새 이미지로 업데이트
-    } catch (err) {
-      console.error('프로필 업데이트 실패:', err.message);
-    }
-  };
+  // 프로필 이미직 관련
+  const { handleFileChange, uploadAndSaveProfile, profileImg } = useFileChange(userData);
 
   const handleDelete = async (postId) => {
     try {
@@ -233,6 +128,7 @@ const MyPage = () => {
 
   return (
     <Wrap>
+      <Toastcontainer />
       <MyProfile
         profileImg={profileImg}
         nickname={nickname}
@@ -264,11 +160,5 @@ const MyPage = () => {
     </Wrap>
   );
 };
-
-const NicknameEdit = styled.input`
-  height: 40px;
-  border-radius: 10px;
-  margin-left: 70px;
-`;
 
 export default MyPage;

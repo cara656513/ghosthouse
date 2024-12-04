@@ -11,6 +11,7 @@ export const OverlayModal = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  /* opacity: 0.9; */
   z-index: 1;
 `;
 
@@ -22,6 +23,7 @@ export const ModalContent = styled.div`
   height: 700px;
   width: 1000px;
   max-width: 90%;
+
   z-index: 10;
   text-align: center;
   box-sizing: border-box;
@@ -33,6 +35,7 @@ export const ProfileContainer = styled.div`
   justify-content: start;
   align-items: center;
   width: 30%;
+  margin-top: 130px;
   /* border: 1px solid red; */
   position: relative;
 `;
@@ -50,11 +53,13 @@ export const ProfileImage = styled.img`
 export const ProfileInput = styled.input`
   text-indent: -99999em;
   border: 1px solid red;
-  background-color: red;
+  background-color: #575555;
   width: 25px;
   position: absolute;
-  bottom: 70px;
+  bottom: -3px;
   right: 50px;
+  padding: 10px;
+  border-radius: 20px;
 `;
 
 export const ModalInput = styled.input`
@@ -63,6 +68,7 @@ export const ModalInput = styled.input`
   width: 300px;
   border-radius: 10px;
   font-size: 30px;
+  margin-top: 260px;
   font-weight: bold;
   justify-content: center;
   align-items: center;
@@ -79,6 +85,7 @@ export const ModalProfile = styled.div`
 
 export const NicknameText = styled.p`
   margin-left: 100px;
+  margin-top: 100px;
 `;
 
 export const NicknameEditBtn = styled.button`
@@ -90,9 +97,15 @@ export const NicknameEditBtn = styled.button`
   color: red;
 `;
 
+export const Nickname = styled.p`
+  position: absolute;
+  top: 120px;
+  left: 100px;
+`;
+
 export const CloseModalBtn = styled.button`
   padding: 10px 20px;
-  background-color: #dc3545;
+  background-color: #575555;
   color: #fff;
   border: none;
   border-radius: 5px;

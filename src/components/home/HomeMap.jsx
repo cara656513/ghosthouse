@@ -84,7 +84,9 @@ const HomeMap = () => {
         }}
         level={9} // 지도의 확대 레벨
       >
+
         {postData.map((position) => (
+
           <MapMarker
             key={`${position.id}`}
             // position={position.latlng}
