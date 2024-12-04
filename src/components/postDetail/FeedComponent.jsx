@@ -7,7 +7,6 @@ import { useParams } from 'react-router-dom';
 import { useUserStore } from '../../zustand/userStore';
 import { CommentForm, CommentWrap, ContentsWrap, FeedContainer, FeedLi, ImgWrap, TitleWrap } from './postDetailStyle';
 
-
 const FeedComponent = () => {
   const { id } = useParams(); // post 게시글 id를 가져올거
   const [comments, setComments] = useState([]); //댓글들 state
@@ -16,7 +15,6 @@ const FeedComponent = () => {
 
   // 유저 정보 가져오기
   const user = useUserStore((state) => state.user);
-
 
   // db 데이터 가져오기
   useEffect(() => {
@@ -125,7 +123,7 @@ const FeedComponent = () => {
                 <div key={comment.id}>
                   <span>
                     {comment.users.nickname} : {comment.comment}
-                    {comment.users.id === user?.user.id && (
+                    {comment.users.id === user.id && (
                       <button onClick={() => deleteComment(comment.id)}>
                         <TiUserDelete />
                       </button>
