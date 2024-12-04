@@ -13,9 +13,10 @@ import {
 } from './NewPostStyles';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import uploadFile from './UploadFile';
-import { fetchUserData } from './fetchCrntUser';
 import { useQuery } from '@tanstack/react-query';
 import { fetchPostDetail } from '../../hooks/posts/usePost';
+import { useUserStore } from '../../zustand/userStore';
+import { toast } from 'react-toastify';
 
 const Postform = ({ mode, onSubmit }) => {
   const [previewImg, setPreviewImg] = useState('');
@@ -27,25 +28,26 @@ const Postform = ({ mode, onSubmit }) => {
   const [position, setPosition] = useState(center);
   const [input, setInput] = useState({});
   const { id } = useParams();
+  const userData = useUserStore((state) => state.user);
 
-  const { data: post, isPending: isPostsPending } = useQuery({
+  const { data: post } = useQuery({
     queryKey: ['crntUserPosts'],
-    queryFn: async () => fetchPostDetail(id)
+    queryFn: async () => fetchPostDetail(id),
+    enabled: !!id
   });
 
   useEffect(() => {
+    //현위치
     if (mode === 'editPost' && post) {
       setPosition({ lng: post.longitude, lat: post.latitude });
     } else if (mode === 'newPost') {
       navigator.geolocation.getCurrentPosition((pos) => {
         setCenter({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-
         setPosition(
           pos ? { lat: pos.coords.latitude, lng: pos.coords.longitude } : { lat: 33.450701, lng: 126.570667 }
         );
       });
     }
-    //현위치
   }, [post]);
 
   const handleImgInputChange = (e) => {
@@ -70,35 +72,18 @@ const Postform = ({ mode, onSubmit }) => {
     updatingObj.longitude = input.lng;
     updatingObj.latitude = input.lat;
 
-    onSubmit(user, updatingObj);
-    navigate('/');
+    if (mode === 'newPost' && !isCompleted) {
+      toast.error('이미지, 타이틀, 텍스트를 입력해주세요.');
+    } else {
+      onSubmit(userData, updatingObj);
+      navigate('/mypage');
+    }
   };
 
   //모달창
   const [modalOpen, setModalOpen] = useState(false);
   const modalBackground = useRef();
-
-  //로그인한 유저
-  const { data: user, isPending } = useQuery({
-    queryKey: ['crntUser'],
-    queryFn: fetchUserData
-  });
-
-  //my 게시물s
-  // const { data: posts, isPending: isPostsPending } = useQuery({
-  //   queryKey: ['crntUserPosts'],
-  //   queryFn: async () => {
-  //     const response = await fetchMyPosts(user.id);
-  //     return response;
-  //   }
-  // });
-
-  if (isPending) {
-    return <div>loading...</div>;
-  }
-  if (isPostsPending) {
-    return <div>posts loading...</div>;
-  }
+  const isCompleted = input.img && input.text && input.title ? true : false;
 
   return (
     <>
@@ -142,14 +127,15 @@ const Postform = ({ mode, onSubmit }) => {
                   onChange={handleTxtInputChange}
                   placeholder="title"
                   required
-                  value={input.title ? input.title : post?.title}
+                  defaultValue={id ? post?.title : input.title}
                 ></input>
                 <Input
                   type="text"
                   id="text"
                   onChange={handleTxtInputChange}
                   placeholder="content"
-                  defaultValue={input.text ? input.text : post?.content}
+                  defaultValue={id ? post?.content : input.text}
+                  required
                 />
               </div>
             </div>
@@ -180,7 +166,7 @@ const Postform = ({ mode, onSubmit }) => {
           >
             <Map
               id="map"
-              center={position} //d여기
+              center={position}
               style={{
                 width: '800px',
                 height: '500px'

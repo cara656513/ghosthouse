@@ -1,6 +1,8 @@
-import Postform from '../components/newpost/postform';
+import Postform from '../components/newpost/PostForm';
 import { useParams } from 'react-router-dom';
 import supabase from '../utils/supabaseClient';
+import Toastcontainer from '../utils/toastcontainer';
+import { toast } from 'react-toastify';
 
 const UpdatePostPage = () => {
   const { id } = useParams();
@@ -17,7 +19,7 @@ const UpdatePostPage = () => {
         .select();
 
       console.log('Post data:', data);
-      alert('글이 수정되었습니다!');
+      toast.success('글이 수정되었습니다!');
 
       if (error) throw error;
     } catch (error) {
@@ -25,7 +27,12 @@ const UpdatePostPage = () => {
     }
   };
 
-  return <Postform mode={'editPost'} onSubmit={editPost} />;
+  return (
+    <>
+      <Toastcontainer />
+      <Postform mode={'editPost'} onSubmit={editPost} />
+    </>
+  );
 };
 
 export default UpdatePostPage;
