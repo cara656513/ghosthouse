@@ -7,6 +7,7 @@ import { ContentsWrap, FeedContainer, FeedLi, ImgWrap, TitleWrap } from './postD
 const SearchPost = () => {
   const [searchPost, setSearchPost] = useSearchParams('');
   const [posts, setPosts] = useState([]);
+  const [userInfo, setUserInfo] = useState([]);
   const searchValue = searchPost.get('q');
 
   useEffect(() => {
@@ -14,7 +15,7 @@ const SearchPost = () => {
       try {
         const { data: post, error } = await supabase
           .from('posts')
-          .select(`*, users(nickname)`)
+          .select(`*,comments(*), users(*)`)
           .ilike('title', `%${searchValue}%`);
         if (error) {
           throw error;
@@ -24,11 +25,29 @@ const SearchPost = () => {
         console.error(error);
       }
     };
+
     if (searchValue) {
       getPost();
     }
   }, []);
-  console.log(posts);
+
+  // users 테이블에 있는 정보 가져오기
+  useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        const { data, error } = await supabase.from('users').select('*');
+        if (error) {
+          throw error;
+        }
+        setUserInfo(data || []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getUserInfo();
+  }, []);
+  console.log('여기', posts, userInfo);
 
   return (
     <>
@@ -53,6 +72,15 @@ const SearchPost = () => {
             </ImgWrap>
             <ContentsWrap>
               <p>{post.content}</p>
+              {post.comments.map((comment) => (
+                <div key={comment.id}>
+                  <span>
+                    {/* {console.log(userInfo.filter((user) => user.id === comment.user_id))} */}
+                    {userInfo && userInfo.filter((user) => user.id === comment.user_id)[0]?.nickname} :{' '}
+                    {comment.comment}
+                  </span>
+                </div>
+              ))}
             </ContentsWrap>
           </FeedLi>
         ))}
