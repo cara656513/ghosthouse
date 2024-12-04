@@ -30,7 +30,6 @@ const HomeMap = () => {
     getPostData();
   }, []);
 
-
   // 현 위치 정보 가져오기. 카카오지도 api 공식문서 참고
   const [state, setState] = useState({
     center: {
@@ -82,11 +81,9 @@ const HomeMap = () => {
           width: '70%',
           height: '450px'
         }}
-        level={9} // 지도의 확대 레벨
+        level={10} // 지도의 확대 레벨
       >
-
         {postData.map((position) => (
-
           <MapMarker
             key={`${position.id}`}
             // position={position.latlng}

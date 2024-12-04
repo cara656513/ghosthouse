@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const FeedContainer = styled.ul`
   height: 100%;
@@ -134,5 +134,16 @@ export const CommentForm = styled.form`
       color: #ffffff;
       font-size: 1.1rem;
     }
+  }
+`;
+
+export const CommentDiv = styled.div`
+  margin: 10px 0;
+  width: 100%;
+  
+  span {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
   }
 `;

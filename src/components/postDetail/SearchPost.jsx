@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import supabase from '../../utils/supabaseClient';
 import { useSearchParams } from 'react-router-dom';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
-import { ContentsWrap, FeedContainer, FeedLi, ImgWrap, TitleWrap } from './postDetailStyle';
+import { CommentDiv, ContentsWrap, FeedContainer, FeedLi, ImgWrap, TitleWrap } from './postDetailStyle';
 
 const SearchPost = () => {
   const [searchPost, setSearchPost] = useSearchParams('');
@@ -73,13 +73,13 @@ const SearchPost = () => {
             <ContentsWrap>
               <p>{post.content}</p>
               {post.comments.map((comment) => (
-                <div key={comment.id}>
+                <CommentDiv key={comment.id}>
                   <span>
                     {/* {console.log(userInfo.filter((user) => user.id === comment.user_id))} */}
                     {userInfo && userInfo.filter((user) => user.id === comment.user_id)[0]?.nickname} :{' '}
                     {comment.comment}
                   </span>
-                </div>
+                </CommentDiv>
               ))}
             </ContentsWrap>
           </FeedLi>
