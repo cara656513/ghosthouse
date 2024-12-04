@@ -142,6 +142,7 @@ const FeedComponent = () => {
 export default FeedComponent;
 
 export const FeedContainer = styled.ul`
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;

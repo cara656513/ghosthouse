@@ -5,18 +5,13 @@ import supabase from '../../utils/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
 const HomeMap = () => {
-  // 1. 현 사용자의 위치대로 지도 중심좌표 찍히게 하기 <완료>
-  // 2. 슈퍼베이스에서 포스트 테이블에 있는 게시글 데이터 전체 가져오기 <완료>
+  // 1. 현 사용자의 위치대로 지도 중심좌표 찍히게 하기
+  // 2. 슈퍼베이스에서 포스트 테이블에 있는 게시글 데이터 전체 가져오기
   // 3. 지도위에 포스트 테이블에 있는 좌표가 마커로 보이게 하기
-  // 3-1. 가져온 데이터 전체를 맵으로 새로운 배열을 만들기
-  // 3-2. 배열에 있는 값은 위도, 경도
-  // 3-3. 새로운 배열에 있는 값을 맵으로 뿌리고
-  // 4. 마커를 눌렀을 때 디테일 모달창이 보이게 하기(모달창 함수를 받아와서 마커 온클릭 했을 때 디테일이 보이게 하기)
+  // 4. 마커를 눌렀을 때 디테일 페이지로 넘어가게 하기
 
   const [postData, setPostData] = useState([]);
   const nav = useNavigate();
-
-  console.log('postData', postData);
 
   // 포스츠 테이블의 모든 데이터 가져오기
   useEffect(() => {
@@ -35,12 +30,6 @@ const HomeMap = () => {
     getPostData();
   }, []);
 
-  // 아이디, 위도, 경도로만 이루어진 배열 데이터 만들기
-  // const newArr = postData.map((item) => ({
-  //   id: item.id,
-  //   latlng: new window.kakao.maps.LatLng(item.latitude, item.longitude),
-  //   title: item.title
-  // }));
 
   // 현 위치 정보 가져오기. 카카오지도 api 공식문서 참고
   const [state, setState] = useState({
@@ -100,7 +89,7 @@ const HomeMap = () => {
             key={`${position.id}`}
             // position={position.latlng}
             // position={{ lat: position.latlng.Ma, lng: position.latlng.La }}
-            position={{ lat: position.latitude, lng: position.longitude }}
+            position={{ lat: position.latitude, lng: position.longitude }} // 마커를 표시할 위치
             image={{
               src: 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png', // 마커이미지의 주소입니다
               size: {
