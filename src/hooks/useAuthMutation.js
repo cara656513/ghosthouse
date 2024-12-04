@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import supabase from '../utils/supabaseClient';
 import { useUserStore } from '../zustand/userStore';
 import { validateNickname, validatePassword } from '../utils/validation';
+import { useToastStore } from '../zustand/authStore';
 
 export const useAuthMutation = () => {
   const navigate = useNavigate();
   const { setUser } = useUserStore();
-  const { setMessage } = useUserStore(); // Zustand 스토어 사용
+  const { setMessage } = useToastStore(); // Zustand 스토어 사용
 
   const signUpMutation = useMutation({
     mutationFn: async ({ email, password, nickname }) => {
@@ -49,11 +50,12 @@ export const useAuthMutation = () => {
       return data;
     },
     onSuccess: (data) => {
+      //성공하면 data.user를 업데이트 하고 홈 화면으로 이동
       setUser(data.user);
       navigate('/');
     },
     onError: (error) => {
-      console.error(error.message);
+      console.error(error.message); //실패하면 에러메세지 출력
     }
   });
   return { signInMutation, signUpMutation };

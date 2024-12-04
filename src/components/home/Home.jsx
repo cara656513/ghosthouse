@@ -1,7 +1,7 @@
 import { HomeForm, HomeH1, HomeWrap } from '../home/homeStyle';
 import { MdManageSearch } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Home = ({ onScroll }) => {
   const [searchValue, setSearchValue] = useState('');
@@ -10,6 +10,9 @@ const Home = ({ onScroll }) => {
     e.preventDefault();
     nav(`/search?q=${searchValue}`);
   };
+
+
+
   return (
     <HomeWrap>
       <div>

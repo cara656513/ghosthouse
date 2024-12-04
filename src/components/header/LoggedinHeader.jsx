@@ -3,10 +3,12 @@ import { ModalContainer, NavButton, NavLink } from './headerStyle';
 import { useState } from 'react';
 import ModalImg from './ModalImg';
 import supabase from '../../utils/supabaseClient';
+import { useUserStore } from '../../zustand/userStore';
 
 const LoggedinHeader = () => {
   const nav = useNavigate();
   const [modal, setModal] = useState(false);
+  const { setUser } = useUserStore();
 
   const logoutHandler = async () => {
     const { error } = await supabase.auth.signOut();
@@ -15,12 +17,15 @@ const LoggedinHeader = () => {
       return;
     }
     setModal(true);
-    nav('/');
+    console.log('11');
   };
 
   const closeModal = () => {
     setModal(false);
+    setUser(null);
+    nav('/signin');
   };
+  console.log('modal', modal);
 
   return (
     <div>
