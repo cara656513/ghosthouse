@@ -1,3 +1,6 @@
+Ghosthouse :집:
+Ghosthouse는 React와 Zustand를 활용하여 설계되었습니다.
+:열린_파일_폴더: 프로젝트 구조
 ```
 Ghosthouse/
 ├── node_modules/               # 프로젝트 의존성 모듈
