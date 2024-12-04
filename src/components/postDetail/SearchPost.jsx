@@ -8,7 +8,6 @@ const SearchPost = () => {
   const [searchPost, setSearchPost] = useSearchParams('');
   const [posts, setPosts] = useState([]);
   const searchValue = searchPost.get('q');
-  console.log(searchValue);
 
   useEffect(() => {
     const getPost = async () => {
