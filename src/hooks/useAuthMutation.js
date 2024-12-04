@@ -50,11 +50,12 @@ export const useAuthMutation = () => {
       return data;
     },
     onSuccess: (data) => {
+      //성공하면 data.user를 업데이트 하고 홈 화면으로 이동
       setUser(data.user);
       navigate('/');
     },
     onError: (error) => {
-      console.error(error.message);
+      console.error(error.message); //실패하면 에러메세지 출력
     }
   });
   return { signInMutation, signUpMutation };
