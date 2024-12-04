@@ -1,8 +1,9 @@
 import { Outlet } from 'react-router-dom';
 import Header from './header/Header';
-import { useUserStore } from '../zustand/userStore';
 import { useEffect } from 'react';
 import supabase from '../utils/supabaseClient';
+import { useUserStore } from '../zustand/userStore';
+
 
 const Layout = () => {
   const { setUser } = useUserStore();
@@ -16,6 +17,7 @@ const Layout = () => {
     };
     initializeAuth();
   }, [setUser]);
+
   return (
     <div>
       <Header />
