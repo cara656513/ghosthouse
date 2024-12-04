@@ -1,10 +1,14 @@
+import Toastcontainer from '../utils/toastcontainer';
 import AddPost from '../components/newpost/AddPost';
-import Postform from '../components/newpost/postform';
+import Postform from '../components/newpost/PostForm';
 
 const NewPost = () => {
-
-  return <Postform mode={'newPost'} onSubmit={AddPost} />;
-
+  return (
+    <>
+      <Toastcontainer />
+      <Postform mode={'newPost'} onSubmit={AddPost} />
+    </>
+  );
 };
 
 export default NewPost;

@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import supabase from '../../utils/supabaseClient';
 
 const AddPost = async (user, updatingObj) => {
@@ -9,7 +10,7 @@ const AddPost = async (user, updatingObj) => {
 
     console.log('Post data:', data);
     if (error) throw error;
-    alert('글이 등록되었습니다!');
+    toast.success('글이 등록되었습니다!');
   } catch (error) {
     console.error('Error submitting post:', error.message);
   }
