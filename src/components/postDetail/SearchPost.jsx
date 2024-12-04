@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import supabase from '../../utils/supabaseClient';
 import { useSearchParams } from 'react-router-dom';
-import { ContentsWrap, FeedContainer, FeedLi, ImgWrap, TitleWrap } from './FeedComponent';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import { ContentsWrap, FeedContainer, FeedLi, ImgWrap, TitleWrap } from './postDetailStyle';
 
 const SearchPost = () => {
   const [searchPost, setSearchPost] = useSearchParams('');
