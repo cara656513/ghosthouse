@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import supabase from '../utils/supabaseClient';
 import { toast } from 'react-toastify';
+import supabase from '../../utils/supabaseClient';
 
 const useUpdateNickname = (userData, fetchUserData) => {
   const [newNickname, setNewNickname] = useState(''); // 새 닉네임 상태
