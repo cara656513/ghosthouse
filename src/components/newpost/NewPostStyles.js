@@ -44,6 +44,7 @@ export const Form = styled.form`
     width: 200px;
     font-family: 'chiller', sans-serif;
     font-size: 30px;
+    cursor: pointer;
   }
 `;
 
@@ -79,6 +80,7 @@ export const Label = styled.label`
   display: grid;
   place-items: center;
   height: 400px;
+  cursor: pointer;
 `;
 
 export const Img = styled.img`
@@ -96,4 +98,5 @@ export const Button = styled.button`
   margin: 5px;
   padding: 10px;
   width: 200px;
+  cursor: pointer;
 `;

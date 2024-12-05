@@ -76,7 +76,7 @@ export const PostEditDelete = styled.button`
   height: 35px;
   width: 55px;
   border-radius: 10px;
-  /* background-color: #383737; */
   background-color: black;
   color: #a80101;
+  cursor: pointer;
 `;

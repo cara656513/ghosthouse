@@ -141,7 +141,7 @@ const Postform = ({ mode, onSubmit }) => {
             </div>
             <div>
               <button type="submit">{mode === 'editPost' ? 'Edit' : 'Submit'}</button>
-              <Link to="/">
+              <Link to={mode === 'editPost' ? '/mypage' : '/'}>
                 <button type="button">cancle</button>
               </Link>
             </div>

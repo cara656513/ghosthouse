@@ -17,9 +17,10 @@ const UploadProfileBtn = styled.button`
   display: flex;
   justify-content: start;
   align-items: center;
-  margin-right: 50px;
   background-color: #575555;
   color: white;
+  cursor: pointer;
+
 `;
 
 const ModalbackImg = styled.div`
@@ -38,7 +39,6 @@ const ProfileImageNone = styled.div`
   background-color: #575555;
 `;
 
-
 const Modal = ({
   profileImg,
   handleFileChange,
@@ -55,8 +55,13 @@ const Modal = ({
         <ModalbackImg />
         <ProfileContainer>
           {profileImg ? <ProfileImage src={profileImg} alt="Profile" /> : <ProfileImageNone />}
-          <ProfileInput type="file" accept="image/*" onChange={handleFileChange} />
-          <UploadProfileBtn onClick={uploadAndSaveProfile}>프로필 수정하기</UploadProfileBtn>
+          <div>
+            <UploadProfileBtn onClick={uploadAndSaveProfile}>프로필 수정하기</UploadProfileBtn>
+            <label>
+              +
+              <ProfileInput type="file" accept="image/*" onChange={handleFileChange} />
+            </label>
+          </div>
         </ProfileContainer>
         <ModalProfile>
           <Nickname>{nickname}님</Nickname>

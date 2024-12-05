@@ -71,10 +71,10 @@ export const OpenModalBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 30px;
-  width: 70px;
   background-color: red;
-  font-size: 10px;
+  font-size: 13px;
+  padding: 6px 10px;
   border-radius: 10px;
   margin-left: 30px;
+  cursor: pointer;
 `;
