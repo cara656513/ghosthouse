@@ -38,7 +38,6 @@ const FeedComponent = () => {
     getComment();
   }, []);
 
-  console.log('user', user);
   // 댓글 가져오기
   const getComment = async () => {
     try {
@@ -48,7 +47,6 @@ const FeedComponent = () => {
       console.error(error);
     }
   };
-  console.log('Comments', comments);
 
   const addNewComment = async (e) => {
     e.preventDefault();

@@ -1,7 +1,7 @@
 import { HomeForm, HomeH1, HomeWrap } from '../home/homeStyle';
 import { MdManageSearch } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const Home = ({ onScroll }) => {
   const [searchValue, setSearchValue] = useState('');

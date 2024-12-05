@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import Home from '../components/Home/Home';
+import Home from '../components/home/Home';
 import HomeMap from '../components/home/HomeMap';
 
 const HomePage = () => {

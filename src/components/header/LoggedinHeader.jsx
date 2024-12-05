@@ -17,7 +17,6 @@ const LoggedinHeader = () => {
       return;
     }
     setModal(true);
-    console.log('11');
   };
 
   const closeModal = () => {

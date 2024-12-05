@@ -1,10 +1,7 @@
-import React from 'react';
-
 import {
   MyPofileTable,
   ProfileImageWrap,
   MyPageListProfileImg,
-  MyNickname,
   OpenModalBtn
 } from '../../components/mypage/myprofilestyle';
 

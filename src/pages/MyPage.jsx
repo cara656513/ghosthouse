@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import supabase from '../utils/supabaseClient';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { data, Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Modal from '../components/mypage/Modal';
 import PostList from '../components/mypage/PostList';
 import MyProfile from '../components/mypage/MyProfile';
@@ -11,7 +10,6 @@ import useUpdateNickname from '../hooks/mypage/useUpdateNickname';
 import useUserData from '../hooks/mypage/useUserData';
 import usePostData from '../hooks/mypage/usePostData';
 import usePostDataDelete from '../hooks/mypage/usePostDataDelete';
-import { useUserStore } from '../zustand/userStore';
 
 const Wrap = styled.div`
   width: 100%;

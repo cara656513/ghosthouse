@@ -1,13 +1,9 @@
-import React from 'react';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import {
   MypostList,
   PostCard,
   PostTitle,
   PostCreated,
-  Popo,
-  PostMap,
-  PostImage,
   PostText,
   PostBut,
   PostEditDelete
@@ -54,8 +50,7 @@ const HoverImage = styled.div`
   }
 `;
 
-const PostList = ({ posts, handleDitailpage, handleDelete, longitude, latitude, position }) => {
-  console.log(posts);
+const PostList = ({ posts, handleDitailpage, handleDelete, position }) => {
   return (
     <MypostList>
       {posts.map((item) => (
