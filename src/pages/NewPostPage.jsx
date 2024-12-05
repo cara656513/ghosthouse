@@ -1,7 +1,14 @@
-import React from 'react';
+import Toastcontainer from '../utils/toastcontainer';
+import AddPost from '../components/newpost/AddPost';
+import Postform from '../components/newpost/PostForm';
 
-const NewPostPage = () => {
-  return <div>NewPostPage</div>;
+const NewPost = () => {
+  return (
+    <>
+      <Toastcontainer />
+      <Postform mode={'newPost'} onSubmit={AddPost} />
+    </>
+  );
 };
 
-export default NewPostPage;
+export default NewPost;

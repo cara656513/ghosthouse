@@ -1,7 +1,23 @@
-import React from 'react';
+import { useRef } from 'react';
+import Home from '../components/home/Home';
+import HomeMap from '../components/home/HomeMap';
 
 const HomePage = () => {
-  return <div>HomePage</div>;
+
+  const bottomRef = useRef();
+  const onMoveToForm = () => {
+    bottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+
+  return (
+    <div>
+      <Home onScroll={onMoveToForm} />
+      <HomeMap />
+      <div ref={bottomRef}></div>
+    </div>
+  );
+
 };
 
 export default HomePage;
