@@ -6,9 +6,7 @@ const usePostDataDelete = (setContents) => {
   const handleDelete = async (postId) => {
     try {
       if (window.confirm('삭제하시겠습니까?')) {
-        // 삭제를 테스트 하기 위해서 임시 값을 넣어둠
         const { error } = await supabase.from('posts').delete().eq('id', postId);
-        // 현제 코드는 로그인값이 구현되지 않아서 userId값이 아니라 tsetID값을 사용중임
         if (error) {
           console.log(error);
           toast.warning('삭제 중 문제가 발생했습니다.');
