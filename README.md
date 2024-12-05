@@ -26,7 +26,7 @@ GHOST HOUSE👻
 | 박우석 | 김진실 | 권현준 | 강민정 | 주호빈 | 서지안 |
 |--------|--------|--------|--------|--------|--------|
 |FE/UL |FE/UL/VL |FE/UL |FE/UL |FE/UL |TL |
-|점메추 |김징징 |준스탠드 |팀플조아 |끝까지간다 |부상투혼 |
+|점메추 |디테일장인 |준스탠드 |사랑해3조 |끝까지간다 |부상투혼 |
 | - 마이 페이지</br>- 내 정보 수정</br>- 게시물 삭제 | - 메인 페이지</br>- 디테일 페이지</br>- 라우터 |- 로그인</br>- 회원가입</br>- zustand |- 새 글쓰기</br>- 게시글 수정</br>- 라우터 |- 디테일 페이지</br>- 검색</br>- 댓글 |- 발표 |
 
 ## 프로젝트 계기
@@ -76,7 +76,7 @@ GHOST HOUSE👻
 </div>
 
 ## 서비스 구조
-
+![image](https://github.com/user-attachments/assets/914b4164-4693-45a5-aab7-56339ecb7980)
 
 ## 와이어프레임
 ![image](https://github.com/user-attachments/assets/d24f1421-24d8-4e2a-bb67-a5cfe002a34b)
@@ -156,7 +156,34 @@ Ghosthouse/
 ```
 
 ## 코드
+1. zustand 로그인한 유저 전역관리
+   
+![image](https://github.com/user-attachments/assets/45de80ce-b020-4560-8303-d053daddbb66)
 
+2. 지도 api를 활용하여 수파베이스 위도, 경도를 map으로 그려주기
+![image](https://github.com/user-attachments/assets/647328f5-a086-43ae-9a10-b1cb714e8b84)
+
+3. 수파베이스 업데이트 기능, 지역 상태 관리를 통해 프로필 업데이트
+![image](https://github.com/user-attachments/assets/8e3674ff-abfb-44bc-b8f4-a4e0e3ba583f)
+
+4. 검색 기능 구현
+   
+![image](https://github.com/user-attachments/assets/b3a66d5a-458e-4f5c-b608-cfa0241d5a4d)
 
 ## trouble shooting
+1. 라우터 설정 문제: 마이페이지에서 새로고침하면 홈으로 가는 현상
+- 해결: 유저가 초기값에 null이라서 초반에 랜더링 될 때 유저가 없기 때문에 퍼블릭 라우트로 이동, 문제 발생
+isLoaded를 사용해서 ProtectedRoute에 적용
+
+![image](https://github.com/user-attachments/assets/0893778b-589e-4143-b1f8-07fca217c9dd)
+![image](https://github.com/user-attachments/assets/084e5dc5-ad4b-467c-81ff-fbe9f646d6b9)
+
+2. privateGet(...).defaultMutationOptions is not a function at SignIn (SignIn.jsx:120:20)
+- 해결: useMutation의 설정 방식 확인
+</br>
+최신 버전의 TanStack Query에서는 mutation.mutate의 두 번째 인자로 옵션을 전달할 수 없으므로 이를 확인해야 합니다.
+</br>
+mutationFn을 설정하고, onSuccess, onError 같은 콜백을 직접 지정하였다.
+
+![image](https://github.com/user-attachments/assets/6a95d9f2-6f86-42d6-a6a5-81ebd598733c)
 
