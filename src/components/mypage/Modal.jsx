@@ -6,7 +6,6 @@ import {
   ProfileImage,
   ProfileInput,
   ModalProfile,
-  NicknameText,
   NicknameEditBtn,
   CloseModalBtn,
   ModalInput,
@@ -39,7 +38,6 @@ const ProfileImageNone = styled.div`
   background-color: #575555;
 `;
 
-import React from 'react';
 
 const Modal = ({
   profileImg,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import supabase from '../../utils/supabaseClient';
 const usePostData = (userData) => {
   const [longitude, setLongitude] = useState(0);

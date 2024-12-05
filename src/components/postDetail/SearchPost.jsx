@@ -47,7 +47,6 @@ const SearchPost = () => {
 
     getUserInfo();
   }, []);
-  console.log('여기', posts, userInfo);
 
   return (
     <>
@@ -75,7 +74,6 @@ const SearchPost = () => {
               {post.comments.map((comment) => (
                 <CommentDiv key={comment.id}>
                   <span>
-                    {/* {console.log(userInfo.filter((user) => user.id === comment.user_id))} */}
                     {userInfo && userInfo.filter((user) => user.id === comment.user_id)[0]?.nickname} :{' '}
                     {comment.comment}
                   </span>

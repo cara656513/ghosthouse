@@ -5,7 +5,6 @@ import SignUpPage from '../pages/SignUpPage';
 import MyPage from '../pages/MyPage';
 import NewPostPage from '../pages/NewPostPage';
 import DetailPage from '../pages/DetailPage';
-import ProfilePage from '../pages/ProfilePage';
 import UpdatePostPage from '../pages/UpdatePostPage';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Layout from '../components/Layout';
@@ -32,7 +31,6 @@ const Router = () => {
             <Route path="/detail/:id" element={<DetailPage />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/newpost" element={<NewPostPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/edit/:id?" element={<UpdatePostPage />} />
           </Route>
         </Route>

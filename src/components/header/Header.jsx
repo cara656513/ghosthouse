@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 const Header = () => {
   // 유저정보 가져오기
   const user = useUserStore((state) => state.user);
-  console.log('user', user);
   const nav = useNavigate();
 
   const homeHandler = () => {

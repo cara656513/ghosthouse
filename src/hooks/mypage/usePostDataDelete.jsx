@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import supabase from '../../utils/supabaseClient';
 import { toast } from 'react-toastify';
 
